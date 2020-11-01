@@ -17,6 +17,7 @@
     "build:electron": "electron .",
     "build": "run-s build:svelte build:electron",
     "start:svelte": "sirv public",
+    "start:svelte:dev": "sirv public --dev",
     "pack:electron": "electron-builder --dir",
     "pack": "run-s build pack:electron",
     "dist:electron": "electron-builder",
