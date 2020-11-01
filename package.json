@@ -1,7 +1,7 @@
 {
-  "name": "svelte-app",
+  "name": "how-git-works",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "An app which visually explains how git works",
   "main": "./src/electron.js",
   "author": {
     "name": "John Lusty",
@@ -9,20 +9,20 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "start": "sirv public",
     "validate": "svelte-check",
-    "electron": "run-s build pure-electron",
-    "pure-electron": "electron .",
-    "electron-dev": "run-p dev pure-electron-dev",
-    "pure-electron-dev": "cross-env NODE_ENV=development electron .",
-    "pack": "run-s build pure-pack",
-    "pure-pack": "electron-builder --dir",
-    "dist": "run-s build pure-dist",
-    "pure-dist": "electron-builder",
-    "dist:portable": "run-s build pure-dist-portable",
-    "pure-dist:portable": "electron-builder --win portable"
+    "dev:svelte": "rollup -c -w",
+    "dev:electron": "cross-env NODE_ENV=development electron .",
+    "dev": "run-p dev:*",
+    "build:svelte": "rollup -c",
+    "build:electron": "electron .",
+    "build": "run-s build:svelte build:electron",
+    "start:svelte": "sirv public",
+    "pack:electron": "electron-builder --dir",
+    "pack": "run-s build pack:electron",
+    "dist:electron": "electron-builder",
+    "dist": "run-s build dist:electron",
+    "portable-dist:electron": "electron-builder --win portable",
+    "portable-dist": "run-s build pure-dist-portable"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^14.0.0",

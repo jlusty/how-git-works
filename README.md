@@ -1,3 +1,3 @@
-# Svelte electron app template
+# How git works
 
-Svelte app template, now using electron
+An app which visually explains how git works
