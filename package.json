@@ -23,7 +23,7 @@
     "dist:electron": "electron-builder",
     "dist": "run-s build dist:electron",
     "portable-dist:electron": "electron-builder --win portable",
-    "portable-dist": "run-s build pure-dist-portable"
+    "portable-dist": "run-s build portable-dist:electron"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^14.0.0",
