@@ -35,7 +35,6 @@ export default {
     // some cases you'll need additional configuration -
     // consult the documentation for details:
     // https://github.com/rollup/plugins/tree/master/packages/commonjs
-    externals(),
     resolve({
       dedupe: ["svelte"],
     }),
@@ -44,6 +43,7 @@ export default {
       sourceMap: !production,
       inlineSources: !production,
     }),
+    externals(),
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
