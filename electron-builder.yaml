@@ -1,0 +1,6 @@
+appId: "com.electron.mysvelteapp"
+
+asar: true
+
+mac:
+  category: "public.app-category.utilities"
