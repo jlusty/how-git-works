@@ -1,4 +1,5 @@
 import svelte from "rollup-plugin-svelte";
+import externals from "rollup-plugin-node-externals";
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import livereload from "rollup-plugin-livereload";
@@ -12,7 +13,8 @@ export default {
   input: "src/main.ts",
   output: {
     sourcemap: !production,
-    format: "iife",
+    format: "cjs",
+    exports: "default",
     name: "app",
     file: "public/build/bundle.js",
   },
@@ -33,8 +35,8 @@ export default {
     // some cases you'll need additional configuration -
     // consult the documentation for details:
     // https://github.com/rollup/plugins/tree/master/packages/commonjs
+    externals(),
     resolve({
-      browser: true,
       dedupe: ["svelte"],
     }),
     commonjs(),
