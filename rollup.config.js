@@ -18,6 +18,7 @@ export default {
     name: "app",
     file: "public/build/bundle.js",
   },
+  external: ["electron"],
   plugins: [
     svelte({
       // enable run-time checks when not in production
@@ -36,6 +37,7 @@ export default {
     // consult the documentation for details:
     // https://github.com/rollup/plugins/tree/master/packages/commonjs
     resolve({
+      browser: true,
       dedupe: ["svelte"],
     }),
     commonjs(),
