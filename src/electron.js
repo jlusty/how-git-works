@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -55,3 +55,12 @@ if (process.env.NODE_ENV === "development") {
     mainWindow.reload();
   });
 }
+
+// Open a file dialog
+ipcMain.on("test-message", (event, arg) => {
+  const { dialog } = require("electron");
+  dialog.showOpenDialog({ properties: ["openFile"] }).then(
+    (dialogFinished) =>
+      event.reply("asynchronous-filename-reply", dialogFinished.filePaths[0]) // TODO: Only getting first item from array of paths here
+  );
+});

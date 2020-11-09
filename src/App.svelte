@@ -1,4 +1,6 @@
 <script lang="ts">
+  import FilesButton from "./FilesButton.svelte";
+
   export let name: string;
 </script>
 
@@ -8,6 +10,7 @@
     padding: 1em;
     max-width: 240px;
     margin: 0 auto;
+    background-color: #ffffff;
   }
 
   h1 {
@@ -31,4 +34,5 @@
     <a href="https://svelte.dev/tutorial">Svelte tutorial</a>
     to learn how to build Svelte apps.
   </p>
+  <FilesButton />
 </main>
