@@ -45,5 +45,8 @@
     "svelte-preprocess": "^4.0.0",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3"
+  },
+  "dependencies": {
+    "svelte-feather-icons": "^3.3.0"
   }
 }

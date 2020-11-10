@@ -3,10 +3,10 @@
   import { filename } from "./stores";
 
   const handleClick = () => {
-    ipcRenderer.send("test-message");
+    ipcRenderer.send("open-file");
   };
 
-  ipcRenderer.on("asynchronous-filename-reply", (event, arg) => {
+  ipcRenderer.on("file-opened", (event, arg) => {
     filename.set(arg);
   });
 </script>

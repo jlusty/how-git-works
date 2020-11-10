@@ -56,11 +56,19 @@ if (process.env.NODE_ENV === "development") {
   });
 }
 
-// Open a file dialog
-ipcMain.on("test-message", (event, arg) => {
+// Open a file with dialog
+ipcMain.on("open-file", (event, arg) => {
   const { dialog } = require("electron");
   dialog.showOpenDialog({ properties: ["openFile"] }).then(
+    (dialogFinished) => event.reply("file-opened", dialogFinished.filePaths[0]) // TODO: Only getting first item from array of paths here
+  );
+});
+
+// Open a folder with dialog
+ipcMain.on("open-folder", (event, arg) => {
+  const { dialog } = require("electron");
+  dialog.showOpenDialog({ properties: ["openDirectory"] }).then(
     (dialogFinished) =>
-      event.reply("asynchronous-filename-reply", dialogFinished.filePaths[0]) // TODO: Only getting first item from array of paths here
+      event.reply("folder-opened", dialogFinished.filePaths[0]) // TODO: Only getting first item from array of paths here
   );
 });

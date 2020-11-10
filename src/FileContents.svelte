@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import readFile from "./filesystem";
+  import { readFile } from "./filesystem";
   import { filename } from "./stores.js";
   import { inflateZlib, parseGitTree } from "./decodeGit";
 
