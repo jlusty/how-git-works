@@ -22,8 +22,7 @@
 </style>
 
 <main>
-  <FilesButton />
-  <FileContents />
   <FolderButton />
   <FolderContents />
+  <FileContents />
 </main>

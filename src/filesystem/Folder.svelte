@@ -12,9 +12,8 @@
 
 <style>
   span {
+    display: flex;
     padding: 0 0 0 1.5em;
-    background: 0 0.1em no-repeat;
-    background-size: 1em 1em;
     font-weight: bold;
     cursor: pointer;
   }
@@ -27,14 +26,21 @@
   li {
     padding: 0.2em 0;
   }
+  .padded {
+    padding: 0px 15px;
+  }
 </style>
 
-{#if expanded}
-  <FolderMinusIcon size="14" />
-{:else}
-  <FolderPlusIcon size="14" />
-{/if}
-<span class:expanded on:click={toggle}>{name}</span>
+<span on:click={toggle}>
+  <div class="padded">
+    {#if expanded}
+      <FolderMinusIcon size="14" />
+    {:else}
+      <FolderPlusIcon size="14" />
+    {/if}
+  </div>
+  {name}
+</span>
 
 {#if expanded}
   <ul>

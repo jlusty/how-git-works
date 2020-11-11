@@ -28,6 +28,7 @@ export interface FolderStruct {
 export interface FileStruct {
   type: "file";
   name: string;
+  fullPath: string;
 }
 
 function traverseDir(dir: string) {
@@ -41,7 +42,7 @@ function traverseDir(dir: string) {
         files: [...traverseDir(fullPath)],
       });
     } else {
-      filesystem.push({ type: "file", name: file });
+      filesystem.push({ type: "file", name: file, fullPath });
     }
   });
   return filesystem;

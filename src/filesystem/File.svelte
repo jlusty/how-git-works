@@ -1,6 +1,12 @@
 <script lang="ts">
   import { FileIcon } from "svelte-feather-icons";
+  import { filename } from "../stores";
   export let name: string;
+  export let fullPath: string;
+
+  function handleClick() {
+    filename.set(fullPath);
+  }
 </script>
 
 <style>
@@ -11,5 +17,7 @@
   }
 </style>
 
-<FileIcon size="12" />
-<span>{name}</span>
+<span on:click={handleClick}>
+  <FileIcon size="12" />
+  {name}
+</span>
