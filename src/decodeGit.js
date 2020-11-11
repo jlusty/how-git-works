@@ -32,7 +32,6 @@ const parseGitTree = (treeBuffer) => {
           );
         }
       }
-      console.log(tempBuf);
       splitArr.push(String.fromCharCode(...tempBuf));
       tempBuf = [];
     }
