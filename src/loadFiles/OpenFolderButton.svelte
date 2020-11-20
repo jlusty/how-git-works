@@ -1,6 +1,6 @@
 <script>
   import { ipcRenderer } from "electron";
-  import { foldername } from "./stores";
+  import { foldername } from "../stores";
 
   const handleClick = () => {
     ipcRenderer.send("open-folder");

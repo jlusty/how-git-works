@@ -1,8 +1,7 @@
 <script lang="ts">
-  import FilesButton from "./FilesButton.svelte";
-  import FolderButton from "./FolderButton.svelte";
-  import FileContents from "./FileContents.svelte";
-  import FolderContents from "./FolderContents.svelte";
+  import FolderButton from "./loadFiles/OpenFolderButton.svelte";
+  import Filesystem from "./filesystem/Filesystem.svelte";
+  import Infobox from "./infobox/Infobox.svelte";
 </script>
 
 <style>
@@ -23,6 +22,6 @@
 
 <main>
   <FolderButton />
-  <FolderContents />
-  <FileContents />
+  <Filesystem />
+  <Infobox />
 </main>

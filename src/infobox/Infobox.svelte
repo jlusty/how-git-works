@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
-  import { readFile } from "./filesystem";
-  import { filename } from "./stores.js";
-  import { inflateZlib, parseGitTree } from "./decodeGit";
+  import { readFile } from "../filesystem/filesystem";
+  import { filename } from "../stores";
+  import { inflateZlib, parseGitTree } from "../processGit/decodeGit";
 
   let decodedContentsStr = "";
   let parsedTree = "";

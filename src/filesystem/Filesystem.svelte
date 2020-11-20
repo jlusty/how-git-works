@@ -1,8 +1,28 @@
 <script lang="ts">
-  import { filesystem } from "../stores.js";
+  import { onDestroy } from "svelte";
+  import { readFolderToFilesystem } from "./filesystem";
+  import { filesystem, foldername } from "../stores";
   import Folder from "./Folder.svelte";
 
-  export let name: string;
+  const unsubscribe = foldername.subscribe((value) => {
+    if (value.length > 0) {
+      filesystem.set(readFolderToFilesystem(value));
+    }
+  });
+
+  onDestroy(unsubscribe);
 </script>
 
-<Folder {name} files={$filesystem} expanded />
+<style>
+  p {
+    white-space: pre-line;
+    text-align: left;
+  }
+</style>
+
+{#if $foldername.length > 0}
+  <Folder name={$foldername} files={$filesystem} expanded />
+  <br />
+{:else}
+  <p>No folder opened</p>
+{/if}

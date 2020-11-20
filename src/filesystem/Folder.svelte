@@ -1,6 +1,6 @@
 <script lang="ts">
   import { FolderPlusIcon, FolderMinusIcon } from "svelte-feather-icons";
-  import type { FileSystemStruct } from "../filesystem";
+  import type { FileSystemStruct } from "./filesystem";
   import File from "./File.svelte";
   export let expanded = false;
   export let name: string;

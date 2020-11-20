@@ -7,6 +7,15 @@
   function handleClick() {
     filename.set(fullPath);
   }
+
+  let hovering = false;
+
+  function enter() {
+    hovering = true;
+  }
+  function leave() {
+    hovering = false;
+  }
 </script>
 
 <style>
@@ -15,13 +24,21 @@
     padding: 0 0 0 1.5em;
     background: 0 0.1em no-repeat;
     background-size: 1em 1em;
+    cursor: pointer;
   }
   .padded {
     padding: 0px 15px;
   }
+  .active {
+    background-color: lightblue;
+  }
 </style>
 
-<span on:click={handleClick}>
+<span
+  on:click={handleClick}
+  class:active={hovering}
+  on:mouseenter={enter}
+  on:mouseleave={leave}>
   <div class="padded">
     <FileIcon size="12" />
   </div>
