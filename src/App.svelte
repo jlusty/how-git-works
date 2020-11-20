@@ -8,20 +8,27 @@
   main {
     text-align: left;
     padding: 1em;
-    max-width: 240px;
     margin: 0 auto;
     background-color: #ffffff;
+    display: flex;
   }
 
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
+  .column {
+    flex-direction: column;
+  }
+
+  .filesSelector {
+    flex-direction: column;
+    width: 35%;
   }
 </style>
 
 <main>
-  <FolderButton />
-  <Filesystem />
-  <Infobox />
+  <div class="filesSelector">
+    <FolderButton />
+    <Filesystem />
+  </div>
+  <div class="column">
+    <Infobox />
+  </div>
 </main>
