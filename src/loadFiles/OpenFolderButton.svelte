@@ -11,5 +11,11 @@
   });
 </script>
 
+<style>
+  button {
+    width: 100%;
+  }
+</style>
+
 <button on:click={handleClick}>Open a folder</button>
 <p>{$foldername}</p>

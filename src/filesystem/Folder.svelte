@@ -2,6 +2,7 @@
   import { FolderPlusIcon, FolderMinusIcon } from "svelte-feather-icons";
   import type { FileSystemStruct } from "./filesystem";
   import File from "./File.svelte";
+
   export let expanded = false;
   export let name: string;
   export let files: FileSystemStruct;
@@ -13,7 +14,6 @@
 <style>
   span {
     display: flex;
-    padding: 0 0 0 1.5em;
     font-weight: bold;
     cursor: pointer;
   }
@@ -26,13 +26,13 @@
   li {
     padding: 0.2em 0;
   }
-  .padded {
-    padding: 0px 15px;
+  .padded-icon {
+    padding-right: 15px;
   }
 </style>
 
 <span on:click={toggle}>
-  <div class="padded">
+  <div class="padded-icon">
     {#if expanded}
       <FolderMinusIcon size="14" />
     {:else}

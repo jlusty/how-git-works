@@ -1,18 +1,20 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
   import { readFile } from "../filesystem/filesystem";
-  import { filename } from "../stores";
+  import { filename, foldername } from "../stores";
   import { inflateZlib, parseGitTree } from "../processGit/decodeGit";
 
+  let fileContentsStr;
   let decodedContentsStr = "";
   let parsedTree = "";
 
   const unsubscribe = filename.subscribe((value) => {
     if (value.length > 0) {
       const fileContents = readFile(value);
-      const decodedContents = inflateZlib(fileContents);
-      decodedContentsStr = decodedContents.toString();
-      parsedTree = parseGitTree(decodedContents);
+      fileContentsStr = fileContents.toString();
+      // const decodedContents = inflateZlib(fileContents);
+      // decodedContentsStr = decodedContents.toString();
+      // parsedTree = parseGitTree(decodedContents);
     }
   });
 
@@ -23,12 +25,22 @@
   p {
     white-space: pre-line;
     text-align: left;
+    word-break: break-all;
+  }
+
+  .scrolling-box {
+    overflow-y: scroll;
+    height: 95%;
   }
 </style>
 
 {#if $filename.length > 0}
-  <p>{decodedContentsStr}</p>
-  <p>{parsedTree}</p>
+  <p>{$filename.replace(`${$foldername}\\`, '')}</p>
+  <div class="scrolling-box">
+    <p>{fileContentsStr}</p>
+    <p>{decodedContentsStr}</p>
+    <p>{parsedTree}</p>
+  </div>
 {:else}
   <p>No file opened</p>
 {/if}

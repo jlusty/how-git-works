@@ -19,11 +19,18 @@
     white-space: pre-line;
     text-align: left;
   }
+
+  .scrolling-box {
+    overflow-y: scroll;
+    height: 95%;
+  }
 </style>
 
 {#if $foldername.length > 0}
-  <Folder name={$foldername} files={$filesystem} expanded />
-  <br />
+  <div class="scrolling-box">
+    <Folder name={$foldername} files={$filesystem} expanded />
+    <br />
+  </div>
 {:else}
   <p>No folder opened</p>
 {/if}

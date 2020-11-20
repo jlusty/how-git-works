@@ -1,6 +1,7 @@
 <script lang="ts">
   import { FileIcon } from "svelte-feather-icons";
   import { filename } from "../stores";
+
   export let name: string;
   export let fullPath: string;
 
@@ -21,13 +22,12 @@
 <style>
   span {
     display: flex;
-    padding: 0 0 0 1.5em;
     background: 0 0.1em no-repeat;
     background-size: 1em 1em;
     cursor: pointer;
   }
-  .padded {
-    padding: 0px 15px;
+  .padded-icon {
+    padding-right: 15px;
   }
   .active {
     background-color: lightblue;
@@ -39,7 +39,7 @@
   class:active={hovering}
   on:mouseenter={enter}
   on:mouseleave={leave}>
-  <div class="padded">
+  <div class="padded-icon">
     <FileIcon size="12" />
   </div>
   {name}
