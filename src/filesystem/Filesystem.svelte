@@ -7,6 +7,7 @@
   const unsubscribe = foldername.subscribe((value) => {
     if (value.length > 0) {
       filesystem.set(readFolderToFilesystem(value));
+      localStorage.setItem("foldername", value);
     }
   });
 
