@@ -7,6 +7,7 @@
 
   function handleClick() {
     filename.set(fullPath);
+    localStorage.setItem("filename", fullPath);
   }
 
   let hovering = false;

@@ -2,8 +2,11 @@
   import { onDestroy } from "svelte";
   import { readFile } from "../filesystem/filesystem";
   import { filename, foldername } from "../stores";
-  import { inflateZlib, parseGitTree } from "../processGit/decodeGit";
-  import File from "../filesystem/File.svelte";
+  import {
+    inflateZlib,
+    parseGitTree,
+    htmlStringifyGitTree,
+  } from "../processGit/decodeGit";
 
   interface FileData {
     buf: Buffer;
@@ -18,7 +21,7 @@
   let file: File;
   let parsedWithZlib = false;
   let parsedTree = false;
-  let infoboxContents = "";
+  let infoboxContents = "<p></p>";
 
   const unsubscribe = filename.subscribe((value) => {
     if (value.length > 0) {
@@ -26,7 +29,7 @@
       const contents = readFile(value);
       file = { contents: { buf: contents, str: contents.toString() } };
 
-      infoboxContents = file.contents.str;
+      infoboxContents = `<p>${file.contents.str}</p>`;
     }
   });
 
@@ -36,23 +39,27 @@
       const zlibParsed = inflateZlib(file.contents.buf);
       file.zlibParsed = { buf: zlibParsed, str: zlibParsed.toString() };
     }
-    infoboxContents = parsedWithZlib ? file.zlibParsed.str : file.contents.str;
+    infoboxContents = `<p>${
+      parsedWithZlib ? file.zlibParsed.str : file.contents.str
+    }</p>`;
   };
 
   const parseTree = () => {
     parsedTree = !parsedTree;
     if (!file.treeParsed) {
       const parsedTree = parseGitTree(file.zlibParsed.buf);
-      file.treeParsed = parsedTree;
+      file.treeParsed = htmlStringifyGitTree(parsedTree);
     }
-    infoboxContents = parsedTree ? file.treeParsed : file.zlibParsed.str;
+    infoboxContents = parsedTree
+      ? `${file.treeParsed}`
+      : `<p>${file.zlibParsed.str}</p>`;
   };
 
   onDestroy(unsubscribe);
 </script>
 
 <style>
-  p {
+  .scrolling-box :global(p) {
     white-space: pre-line;
     text-align: left;
     word-break: break-all;
@@ -82,7 +89,7 @@
     {/if}
   </div>
   <div class="scrolling-box">
-    <p>{infoboxContents}</p>
+    {@html infoboxContents}
   </div>
 {:else}
   <p>No file opened</p>
