@@ -2,8 +2,9 @@
   import { onDestroy } from "svelte";
   import { readFile } from "../filesystem/filesystem";
   import { filename, foldername } from "../stores";
-  import { inflateZlib, parseGitTree } from "../processGit/decodeGit";
-  import type { GitTree } from "../processGit/decodeGit";
+  import { inflateZlib } from "../processGit/decodeGit";
+  import { parseGitTree } from "../processGit/tree";
+  import type { GitTree } from "../processGit/tree";
   import GitTreeComp from "../processGit/GitTree.svelte";
   import NavigationButtons from "./NavigationButtons.svelte";
 

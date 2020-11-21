@@ -1,17 +1,9 @@
 <script lang="ts">
-  import type { GitTree } from "./decodeGit";
-  import { foldername, filename } from "../stores";
+  import type { GitTree } from "./tree";
+  import HyperlinkHashes from "./HyperlinkHashes.svelte";
 
   export let textStr: string = "";
   export let gitTree: GitTree;
-
-  const goToObject = (hash: string) => {
-    const fullPath = `${$foldername}\\objects\\${hash.substr(
-      0,
-      2
-    )}\\${hash.substr(2)}`;
-    filename.set(fullPath);
-  };
 </script>
 
 <style>
@@ -23,17 +15,12 @@
 </style>
 
 {#if textStr !== ''}
-  <p>{textStr}</p>
+  <HyperlinkHashes {textStr} />
 {:else if gitTree}
-  <p>
-    {gitTree.name}
-    {gitTree.length}{'\n'}
-    {#each gitTree.files as f}
-      {`${f.type} ${f.name} `}<a
-        href="#"
-        on:click={() => goToObject(f.hash)}>{f.hash}</a>{'\n'}
-    {/each}
-  </p>
+  <HyperlinkHashes
+    textStr={`${gitTree.name} ${gitTree.length}\n${gitTree.files
+      .map((f) => `${f.type} ${f.name} ${f.hash}\n`)
+      .join('')}`} />
 {:else}
   <p />
 {/if}
