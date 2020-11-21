@@ -13,7 +13,7 @@
   }
   interface File {
     contents: FileData;
-    zlibParsed?: FileData;
+    zlibParsed?: FileData | "Unable to parse with zlib";
     treeParsed?: GitTree;
   }
 
@@ -39,14 +39,32 @@
       parsedTree = false;
     }
     if (!file.zlibParsed) {
-      const zlibParsed = inflateZlib(file.contents.buf);
-      file.zlibParsed = { buf: zlibParsed, str: zlibParsed.toString() };
+      try {
+        const zlibParsed = inflateZlib(file.contents.buf);
+        file.zlibParsed = { buf: zlibParsed, str: zlibParsed.toString() };
+      } catch (err) {
+        if (err.code === "Z_DATA_ERROR") {
+          file.zlibParsed = "Unable to parse with zlib";
+        } else {
+          throw err;
+        }
+      }
     }
-    infoboxContents = parsedWithZlib ? file.zlibParsed.str : file.contents.str;
+    if (parsedWithZlib) {
+      infoboxContents =
+        file.zlibParsed === "Unable to parse with zlib"
+          ? "Unable to parse with zlib"
+          : file.zlibParsed.str;
+    } else {
+      infoboxContents = file.contents.str;
+    }
   };
 
   const parseTree = () => {
     parsedTree = !parsedTree;
+    if (file.zlibParsed === "Unable to parse with zlib") {
+      return;
+    }
     if (!file.treeParsed) {
       const parsedTree = parseGitTree(file.zlibParsed.buf);
       file.treeParsed = parsedTree;
@@ -78,7 +96,7 @@
   <p>{$filename.replace(`${$foldername}\\`, '')}</p>
   <div class="button-row">
     <button on:click={parseZlib}>zlib: {parsedWithZlib}</button>
-    {#if parsedWithZlib}
+    {#if parsedWithZlib && file.zlibParsed !== 'Unable to parse with zlib'}
       <button on:click={parseTree}>tree: {parsedTree}</button>
     {/if}
   </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { ArrowLeftIcon, ArrowRightIcon } from "svelte-feather-icons";
   import { filename, fileHistory } from "../stores";
 
   let goingBack = false;
@@ -39,9 +40,16 @@
 
 <style>
   button {
-    width: 50px;
+    width: 40px;
   }
 </style>
 
-<button on:click={handleBackClick}>Back</button>
-<button on:click={handleForwardClick}>Forward</button>
+<div>
+  <button
+    on:click={handleBackClick}
+    disabled={$fileHistory.position === 0}><ArrowLeftIcon size="14" /></button>
+  <button
+    on:click={handleForwardClick}
+    disabled={$fileHistory.position === $fileHistory.history.length - 1}><ArrowRightIcon
+      size="14" /></button>
+</div>
