@@ -2,11 +2,9 @@
   import { onDestroy } from "svelte";
   import { readFile } from "../filesystem/filesystem";
   import { filename, foldername } from "../stores";
-  import {
-    inflateZlib,
-    parseGitTree,
-    htmlStringifyGitTree,
-  } from "../processGit/decodeGit";
+  import { inflateZlib, parseGitTree } from "../processGit/decodeGit";
+  import type { GitTree } from "../processGit/decodeGit";
+  import GitTreeComp from "../processGit/GitTree.svelte";
 
   interface FileData {
     buf: Buffer;
@@ -15,13 +13,13 @@
   interface File {
     contents: FileData;
     zlibParsed?: FileData;
-    treeParsed?: string;
+    treeParsed?: GitTree;
   }
 
   let file: File;
   let parsedWithZlib = false;
   let parsedTree = false;
-  let infoboxContents = "<p></p>";
+  let infoboxContents = "";
 
   const unsubscribe = filename.subscribe((value) => {
     if (value.length > 0) {
@@ -29,7 +27,7 @@
       const contents = readFile(value);
       file = { contents: { buf: contents, str: contents.toString() } };
 
-      infoboxContents = `<p>${file.contents.str}</p>`;
+      infoboxContents = file.contents.str;
     }
   });
 
@@ -39,32 +37,22 @@
       const zlibParsed = inflateZlib(file.contents.buf);
       file.zlibParsed = { buf: zlibParsed, str: zlibParsed.toString() };
     }
-    infoboxContents = `<p>${
-      parsedWithZlib ? file.zlibParsed.str : file.contents.str
-    }</p>`;
+    infoboxContents = parsedWithZlib ? file.zlibParsed.str : file.contents.str;
   };
 
   const parseTree = () => {
     parsedTree = !parsedTree;
     if (!file.treeParsed) {
       const parsedTree = parseGitTree(file.zlibParsed.buf);
-      file.treeParsed = htmlStringifyGitTree(parsedTree);
+      file.treeParsed = parsedTree;
     }
-    infoboxContents = parsedTree
-      ? `${file.treeParsed}`
-      : `<p>${file.zlibParsed.str}</p>`;
+    infoboxContents = parsedTree ? "" : file.zlibParsed.str;
   };
 
   onDestroy(unsubscribe);
 </script>
 
 <style>
-  .scrolling-box :global(p) {
-    white-space: pre-line;
-    text-align: left;
-    word-break: break-all;
-  }
-
   .scrolling-box {
     overflow-y: scroll;
     height: 95%;
@@ -89,7 +77,7 @@
     {/if}
   </div>
   <div class="scrolling-box">
-    {@html infoboxContents}
+    <GitTreeComp textStr={infoboxContents} gitTree={file.treeParsed} />
   </div>
 {:else}
   <p>No file opened</p>

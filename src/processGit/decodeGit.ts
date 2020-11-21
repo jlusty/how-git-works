@@ -3,7 +3,7 @@ import * as zlib from "zlib";
 const inflateZlib = (zlibEncoded: Buffer): Buffer =>
   zlib.inflateSync(zlibEncoded);
 
-interface GitTree {
+export interface GitTree {
   name: string;
   length: string;
   files: Entry[];
@@ -69,14 +69,4 @@ const parseGitTree = (treeBuffer: Buffer): GitTree => {
   return gitTree;
 };
 
-const stringifyGitTree = (gitTree: GitTree): string =>
-  `${gitTree.name} ${gitTree.length}\n${gitTree.files
-    .map((f) => `${f.type} ${f.name} ${f.hash}`)
-    .join("\n")}`;
-
-const htmlStringifyGitTree = (gitTree: GitTree): string =>
-  `<p>${gitTree.name} ${gitTree.length}\n${gitTree.files
-    .map((f) => `${f.type} ${f.name} <a href="#">${f.hash}</a>`)
-    .join("\n")}</p>`;
-
-export { inflateZlib, parseGitTree, htmlStringifyGitTree };
+export { inflateZlib, parseGitTree };

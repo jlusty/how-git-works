@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { ipcRenderer } from "electron";
   import { foldername } from "../stores";
 
