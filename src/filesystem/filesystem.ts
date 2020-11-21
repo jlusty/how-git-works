@@ -1,7 +1,4 @@
-// Hack to stop @rollup/plugin-typescript from complaining
-// @ts-ignore
 import * as fs from "fs";
-// @ts-ignore
 import * as path from "path";
 
 function readFile(pathString: string) {
