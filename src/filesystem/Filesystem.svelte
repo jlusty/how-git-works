@@ -23,6 +23,7 @@
   .scrolling-box {
     overflow-y: scroll;
     height: 95%;
+    overflow-x: auto;
   }
 </style>
 
