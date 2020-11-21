@@ -28,9 +28,12 @@
       parsedWithZlib = false;
       parsedTree = false;
       const contents = readFile(value);
-      file = { contents: { buf: contents, str: contents.toString() } };
-
-      infoboxContents = file.contents.str;
+      if (contents) {
+        file = { contents: { buf: contents, str: contents.toString() } };
+        infoboxContents = file.contents.str;
+      } else {
+        infoboxContents = "!!! File not found !!!";
+      }
     }
   });
 
@@ -102,7 +105,7 @@
     {/if}
   </div>
   <div class="scrolling-box">
-    <GitTreeComp textStr={infoboxContents} gitTree={file.treeParsed} />
+    <GitTreeComp textStr={infoboxContents} gitTree={file?.treeParsed} />
   </div>
 {:else}
   <p>No file opened</p>

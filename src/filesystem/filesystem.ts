@@ -1,19 +1,19 @@
 import * as fs from "fs";
 import * as path from "path";
 
-function readFile(pathString: string): Buffer {
+function readFile(pathString: string): Buffer | null {
   if (fs.existsSync(pathString)) {
     return fs.readFileSync(pathString);
   }
-  return Buffer.from("");
+  return null;
 }
 
-function readFolderToFilesystem(pathString: string): FileSystemStruct {
+function readFolderToFilesystem(pathString: string): FileSystemStruct | null {
   if (fs.existsSync(pathString)) {
     const filesystem = traverseDir(pathString);
     return filesystem;
   }
-  return [];
+  return null;
 }
 
 export type FileSystemStruct = Array<FolderStruct | FileStruct>;
