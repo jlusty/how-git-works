@@ -5,6 +5,7 @@
   import { inflateZlib, parseGitTree } from "../processGit/decodeGit";
   import type { GitTree } from "../processGit/decodeGit";
   import GitTreeComp from "../processGit/GitTree.svelte";
+  import NavigationButtons from "./NavigationButtons.svelte";
 
   interface FileData {
     buf: Buffer;
@@ -24,6 +25,7 @@
   const unsubscribe = filename.subscribe((value) => {
     if (value.length > 0) {
       parsedWithZlib = false;
+      parsedTree = false;
       const contents = readFile(value);
       file = { contents: { buf: contents, str: contents.toString() } };
 
@@ -33,6 +35,9 @@
 
   const parseZlib = () => {
     parsedWithZlib = !parsedWithZlib;
+    if (!parsedWithZlib) {
+      parsedTree = false;
+    }
     if (!file.zlibParsed) {
       const zlibParsed = inflateZlib(file.contents.buf);
       file.zlibParsed = { buf: zlibParsed, str: zlibParsed.toString() };
@@ -68,6 +73,7 @@
   }
 </style>
 
+<NavigationButtons />
 {#if $filename.length > 0}
   <p>{$filename.replace(`${$foldername}\\`, '')}</p>
   <div class="button-row">

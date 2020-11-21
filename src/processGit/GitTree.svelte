@@ -11,7 +11,6 @@
       2
     )}\\${hash.substr(2)}`;
     filename.set(fullPath);
-    localStorage.setItem("filename", fullPath);
   };
 </script>
 
