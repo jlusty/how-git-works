@@ -6,7 +6,6 @@
   let goingForward = false;
 
   filename.subscribe((value) => {
-    console.log(JSON.stringify($fileHistory));
     if (goingBack) {
       fileHistory.update((fh) => ({ ...fh, position: fh.position - 1 }));
       goingBack = false;
