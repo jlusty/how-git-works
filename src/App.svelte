@@ -5,10 +5,10 @@
 
   let staticBoxWidth = 250;
   let dynamicBoxWidth = staticBoxWidth;
-  let resizeStartX;
+  let resizeStartX: number;
   let mousedown = false;
 
-  const handleMousedown = (event) => {
+  const handleMousedown = (event: MouseEvent) => {
     mousedown = true;
     resizeStartX = event.clientX;
   };
@@ -17,11 +17,11 @@
     staticBoxWidth = dynamicBoxWidth;
   };
 
-  function handleMousemove(event) {
+  const handleMousemove = (event: MouseEvent) => {
     if (mousedown) {
       dynamicBoxWidth = staticBoxWidth + (event.clientX - resizeStartX);
     }
-  }
+  };
 </script>
 
 <style>
