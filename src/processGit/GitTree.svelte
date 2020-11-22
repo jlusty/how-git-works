@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { parseGitTree } from "./tree";
+  import { parseGitTree } from "./parseTree";
   import HyperlinkHashes from "./HyperlinkHashes.svelte";
 
   export let zlibBuf: Buffer;

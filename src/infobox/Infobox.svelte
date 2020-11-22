@@ -3,7 +3,8 @@
   import Toggle from "svelte-toggle";
   import { readFile } from "../filesystem/filesystem";
   import { filename, foldername } from "../stores";
-  import GitTreeComp from "../processGit/GitTree.svelte";
+  import GitTreeComponent from "../processGit/GitTree.svelte";
+  import GitIndexComponent from "../processGit/GitIndex.svelte";
   import NavigationButtons from "./NavigationButtons.svelte";
   import HyperlinkHashes from "../processGit/HyperlinkHashes.svelte";
   import { parseFile } from "./parseFile";
@@ -12,11 +13,13 @@
   let file: GitFile;
   let parsedWithZlib = false;
   let parsedTree = false;
+  let parsedIndex = false;
   let infoboxContents = "";
 
   const unsubscribe = filename.subscribe((value) => {
     parsedWithZlib = false;
     parsedTree = false;
+    parsedIndex = false;
     if (value.length > 0) {
       const contents = readFile(value);
       if (contents) {
@@ -70,13 +73,18 @@
       <p class="toggle-label">tree parsed:</p>
       <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
     {/if}
+  {:else if file.contents.str.substr(0, 4) === 'DIRC'}
+    <p class="toggle-label">index parsed:</p>
+    <Toggle bind:toggled={parsedIndex} hideLabel class="no-margin" />
   {/if}
 </div>
 {#if $filename.length > 0}
   <h4>{$filename.replace(`${$foldername}\\`, '')}</h4>
   <div class="scrolling-box">
     {#if parsedTree}
-      <GitTreeComp zlibBuf={file.zlibParsed.buf} />
+      <GitTreeComponent zlibBuf={file.zlibParsed.buf} />
+    {:else if parsedIndex}
+      <GitIndexComponent contentBuf={file.contents.buf} />
     {:else}
       <HyperlinkHashes
         textStr={parsedWithZlib ? file.zlibParsed.str : infoboxContents} />

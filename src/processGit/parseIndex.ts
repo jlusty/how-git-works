@@ -9,8 +9,8 @@ export interface GitIndex {
 
 interface IndexHeaders {
   signature: string;
-  version: number[];
-  numEntries: number[];
+  version: number;
+  numEntries: number;
 }
 
 interface IndexEntry {
@@ -54,10 +54,8 @@ const parseGitIndex = (indexBuffer: Buffer): GitIndex => {
   const bytes = indexBuffer.values();
 
   const signature = getBytes(bytes, 4);
-  const version = getBytes(bytes, 4);
-  const numEntries = getBytes(bytes, 4);
-
-  const numEntriesInt = get32bitNum(numEntries);
+  const version = get32bitNum(getBytes(bytes, 4));
+  const numEntries = get32bitNum(getBytes(bytes, 4));
 
   const indexHeaders: IndexHeaders = {
     signature: String.fromCharCode(...signature),
@@ -66,7 +64,7 @@ const parseGitIndex = (indexBuffer: Buffer): GitIndex => {
   };
 
   const entries: IndexEntry[] = [];
-  for (let i = 0; i < numEntriesInt; i++) {
+  for (let i = 0; i < numEntries; i++) {
     let nextByte = bytes.next().value;
     while (nextByte === 0) {
       nextByte = bytes.next().value;
@@ -119,9 +117,8 @@ const parseGitIndex = (indexBuffer: Buffer): GitIndex => {
   while (hasExtension) {
     const extensionStr = String.fromCharCode(...tryExtension);
     if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".includes(extensionStr[0])) {
-      const extensionSize = getBytes(bytes, 4);
-      const extensionSizeInt = get32bitNum(extensionSize);
-      const extensionBytes = getBytes(bytes, extensionSizeInt);
+      const extensionSize = get32bitNum(getBytes(bytes, 4));
+      const extensionBytes = getBytes(bytes, extensionSize);
       extensionsBuf.push({ signature: extensionStr, bytes: extensionBytes });
       tryExtension = getBytes(bytes, 4);
     } else {
