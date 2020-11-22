@@ -7,14 +7,6 @@
   const gitTree = parseGitTree(zlibBuf);
 </script>
 
-<style>
-  p {
-    white-space: pre-line;
-    text-align: left;
-    word-break: break-all;
-  }
-</style>
-
 <HyperlinkHashes
   textStr={`${gitTree.name} ${gitTree.length}\n${gitTree.files
     .map((f) => `${f.type} ${f.name} ${f.hash}\n`)

@@ -63,7 +63,9 @@
 <p>
   {#each splitAtHashes(textStr, findHashes(textStr)) as s}
     {#if s.isHash}
-      <a href="#" on:click={() => goToObject(s.text)}>{s.text}</a>
+      <a
+        href={`${$foldername}\\objects\\${s.text.substr(0, 2)}\\${s.text.substr(2)}`}
+        on:click={() => goToObject(s.text)}>{s.text}</a>
     {:else}{s.text}{/if}
   {/each}
 </p>

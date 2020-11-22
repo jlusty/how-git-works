@@ -7,7 +7,7 @@
     ipcRenderer.send("open-folder");
   };
 
-  ipcRenderer.on("folder-opened", (event, arg) => {
+  ipcRenderer.on("folder-opened", (_event, arg) => {
     foldername.set(arg);
   });
 </script>
