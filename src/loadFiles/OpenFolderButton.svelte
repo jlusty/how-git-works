@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ipcRenderer } from "electron";
   import { foldername } from "../stores";
+  import RefreshFolder from "./RefreshFolder.svelte";
 
   const handleClick = () => {
     ipcRenderer.send("open-folder");
@@ -12,10 +13,18 @@
 </script>
 
 <style>
-  button {
-    width: 100%;
+  .button-row {
+    width: 95%;
+    display: flex;
+  }
+
+  .open-folder-button {
+    flex: 0 0 80%;
   }
 </style>
 
-<button on:click={handleClick}>Open a folder</button>
+<div class="button-row">
+  <button on:click={handleClick} class="open-folder-button">Open a folder</button>
+  <RefreshFolder />
+</div>
 <p>{$foldername}</p>
