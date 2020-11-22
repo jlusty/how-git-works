@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import { writable } from "svelte/store";
 
 export const foldername = writable(localStorage.getItem("foldername") || "");
@@ -7,7 +8,11 @@ export const filename = writable(localStorage.getItem("filename") || "");
 export const fileHistory = writable({ history: [], position: -1 });
 
 filename.subscribe((value) => {
-  localStorage.setItem("filename", value ?? "");
+  if (fs.existsSync(value)) {
+    localStorage.setItem("filename", value);
+  } else {
+    localStorage.setItem("filename", "");
+  }
 });
 
 foldername.subscribe((value) => {

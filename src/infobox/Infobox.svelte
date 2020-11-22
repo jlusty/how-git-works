@@ -15,9 +15,9 @@
   let infoboxContents = "";
 
   const unsubscribe = filename.subscribe((value) => {
+    parsedWithZlib = false;
+    parsedTree = false;
     if (value.length > 0) {
-      parsedWithZlib = false;
-      parsedTree = false;
       const contents = readFile(value);
       if (contents) {
         file = parseFile(contents);
@@ -30,6 +30,8 @@
       }
     }
   });
+
+  $: parsedTree = parsedWithZlib && parsedTree;
 
   onDestroy(unsubscribe);
 </script>
@@ -61,7 +63,7 @@
 
 <div class="button-row">
   <NavigationButtons />
-  {#if file.zlibParsed}
+  {#if file?.zlibParsed}
     <p class="toggle-label">zlib decoded:</p>
     <Toggle bind:toggled={parsedWithZlib} hideLabel class="no-margin" />
     {#if parsedWithZlib}
@@ -71,7 +73,7 @@
   {/if}
 </div>
 {#if $filename.length > 0}
-  <p>{$filename.replace(`${$foldername}\\`, '')}</p>
+  <h4>{$filename.replace(`${$foldername}\\`, '')}</h4>
   <div class="scrolling-box">
     {#if parsedTree}
       <GitTreeComp zlibBuf={file.zlibParsed.buf} />
