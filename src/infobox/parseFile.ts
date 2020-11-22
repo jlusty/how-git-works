@@ -7,13 +7,21 @@ interface FileData {
 export interface GitFile {
   contents: FileData;
   zlibParsed: FileData | null;
+  type: string | null;
 }
 
 const parseFile = (fileBuf: Buffer): GitFile => {
   const zlibBuf = parseZlib(fileBuf);
+  let zlibStr: string;
+  let type = null;
+  if (zlibBuf) {
+    zlibStr = zlibBuf.toString();
+    type = zlibStr.split(" ")[0];
+  }
   return {
     contents: { buf: fileBuf, str: fileBuf.toString() },
-    zlibParsed: zlibBuf ? { buf: zlibBuf, str: zlibBuf.toString() } : null,
+    zlibParsed: zlibBuf ? { buf: zlibBuf, str: zlibStr } : null,
+    type,
   };
 };
 

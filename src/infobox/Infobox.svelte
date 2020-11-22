@@ -66,7 +66,7 @@
   {#if file?.zlibParsed}
     <p class="toggle-label">zlib decoded:</p>
     <Toggle bind:toggled={parsedWithZlib} hideLabel class="no-margin" />
-    {#if parsedWithZlib}
+    {#if parsedWithZlib && file.type === 'tree'}
       <p class="toggle-label">tree parsed:</p>
       <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
     {/if}
