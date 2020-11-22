@@ -1,24 +1,15 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
+  import Toggle from "svelte-toggle";
   import { readFile } from "../filesystem/filesystem";
   import { filename, foldername } from "../stores";
-  import { inflateZlib } from "../processGit/decodeGit";
-  import { parseGitTree } from "../processGit/tree";
-  import type { GitTree } from "../processGit/tree";
   import GitTreeComp from "../processGit/GitTree.svelte";
   import NavigationButtons from "./NavigationButtons.svelte";
+  import HyperlinkHashes from "../processGit/HyperlinkHashes.svelte";
+  import { parseFile } from "./parseFile";
+  import type { GitFile } from "./parseFile";
 
-  interface FileData {
-    buf: Buffer;
-    str: string;
-  }
-  interface File {
-    contents: FileData;
-    zlibParsed?: FileData | "Unable to parse with zlib";
-    treeParsed?: GitTree;
-  }
-
-  let file: File;
+  let file: GitFile;
   let parsedWithZlib = false;
   let parsedTree = false;
   let infoboxContents = "";
@@ -29,52 +20,16 @@
       parsedTree = false;
       const contents = readFile(value);
       if (contents) {
-        file = { contents: { buf: contents, str: contents.toString() } };
+        file = parseFile(contents);
         infoboxContents = file.contents.str;
+        if (file.zlibParsed) {
+          parsedWithZlib = true;
+        }
       } else {
         infoboxContents = "!!! File not found !!!";
       }
     }
   });
-
-  const parseZlib = () => {
-    parsedWithZlib = !parsedWithZlib;
-    if (!parsedWithZlib) {
-      parsedTree = false;
-    }
-    if (!file.zlibParsed) {
-      try {
-        const zlibParsed = inflateZlib(file.contents.buf);
-        file.zlibParsed = { buf: zlibParsed, str: zlibParsed.toString() };
-      } catch (err) {
-        if (err.code === "Z_DATA_ERROR") {
-          file.zlibParsed = "Unable to parse with zlib";
-        } else {
-          throw err;
-        }
-      }
-    }
-    if (parsedWithZlib) {
-      infoboxContents =
-        file.zlibParsed === "Unable to parse with zlib"
-          ? "Unable to parse with zlib"
-          : file.zlibParsed.str;
-    } else {
-      infoboxContents = file.contents.str;
-    }
-  };
-
-  const parseTree = () => {
-    parsedTree = !parsedTree;
-    if (file.zlibParsed === "Unable to parse with zlib") {
-      return;
-    }
-    if (!file.treeParsed) {
-      const parsedTree = parseGitTree(file.zlibParsed.buf);
-      file.treeParsed = parsedTree;
-    }
-    infoboxContents = parsedTree ? "" : file.zlibParsed.str;
-  };
 
   onDestroy(unsubscribe);
 </script>
@@ -88,24 +43,42 @@
   .button-row {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    margin: 0;
+    flex: 0 0 45px;
   }
 
-  button {
-    width: 25%;
+  :global(.no-margin) {
+    padding: 0;
+    margin: 0;
+  }
+
+  .toggle-label {
+    font-size: small;
+    padding: 0 5px 0 20px;
   }
 </style>
 
-<NavigationButtons />
+<div class="button-row">
+  <NavigationButtons />
+  {#if file.zlibParsed}
+    <p class="toggle-label">zlib decoded:</p>
+    <Toggle bind:toggled={parsedWithZlib} hideLabel class="no-margin" />
+    {#if parsedWithZlib}
+      <p class="toggle-label">tree parsed:</p>
+      <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
+    {/if}
+  {/if}
+</div>
 {#if $filename.length > 0}
   <p>{$filename.replace(`${$foldername}\\`, '')}</p>
-  <div class="button-row">
-    <button on:click={parseZlib}>zlib: {parsedWithZlib}</button>
-    {#if parsedWithZlib && file.zlibParsed !== 'Unable to parse with zlib'}
-      <button on:click={parseTree}>tree: {parsedTree}</button>
-    {/if}
-  </div>
   <div class="scrolling-box">
-    <GitTreeComp textStr={infoboxContents} gitTree={file?.treeParsed} />
+    {#if parsedTree}
+      <GitTreeComp zlibBuf={file.zlibParsed.buf} />
+    {:else}
+      <HyperlinkHashes
+        textStr={parsedWithZlib ? file.zlibParsed.str : infoboxContents} />
+    {/if}
   </div>
 {:else}
   <p>No file opened</p>

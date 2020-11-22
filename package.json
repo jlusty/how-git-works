@@ -47,6 +47,7 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
-    "svelte-feather-icons": "^3.3.0"
+    "svelte-feather-icons": "^3.3.0",
+    "svelte-toggle": "^1.1.0"
   }
 }

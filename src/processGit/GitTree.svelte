@@ -1,9 +1,10 @@
 <script lang="ts">
-  import type { GitTree } from "./tree";
+  import { parseGitTree } from "./tree";
   import HyperlinkHashes from "./HyperlinkHashes.svelte";
 
-  export let textStr: string = "";
-  export let gitTree: GitTree;
+  export let zlibBuf: Buffer;
+
+  const gitTree = parseGitTree(zlibBuf);
 </script>
 
 <style>
@@ -14,13 +15,7 @@
   }
 </style>
 
-{#if textStr !== ''}
-  <HyperlinkHashes {textStr} />
-{:else if gitTree}
-  <HyperlinkHashes
-    textStr={`${gitTree.name} ${gitTree.length}\n${gitTree.files
-      .map((f) => `${f.type} ${f.name} ${f.hash}\n`)
-      .join('')}`} />
-{:else}
-  <p />
-{/if}
+<HyperlinkHashes
+  textStr={`${gitTree.name} ${gitTree.length}\n${gitTree.files
+    .map((f) => `${f.type} ${f.name} ${f.hash}\n`)
+    .join('')}`} />

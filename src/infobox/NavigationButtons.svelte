@@ -40,6 +40,7 @@
 <style>
   button {
     width: 40px;
+    margin: 0;
   }
 </style>
 
