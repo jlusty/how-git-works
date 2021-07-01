@@ -73,7 +73,7 @@
       <p class="toggle-label">tree parsed:</p>
       <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
     {/if}
-  {:else if file.contents.str.substr(0, 4) === 'DIRC'}
+  {:else if file?.contents.str.substr(0, 4) === 'DIRC'}
     <p class="toggle-label">index parsed:</p>
     <Toggle bind:toggled={parsedIndex} hideLabel class="no-margin" />
   {/if}
