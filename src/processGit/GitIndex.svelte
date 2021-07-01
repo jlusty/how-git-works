@@ -3,14 +3,16 @@
   import HyperlinkHashes from "./HyperlinkHashes.svelte";
 
   export let contentBuf: Buffer;
+  export let showAscii: boolean = false;
 
   const gitIndex = parseGitIndex(contentBuf);
 </script>
 
 <HyperlinkHashes
-  textStr={`${gitIndex.headers.signature} ${gitIndex.headers.version} ${
-    gitIndex.headers.numEntries
-  }\n\
+  bytes={[
+    ...`${gitIndex.headers.signature} ${gitIndex.headers.version} ${
+      gitIndex.headers.numEntries
+    }\n\
    ${gitIndex.entries
      .map(
        (
@@ -22,5 +24,7 @@
    ${gitIndex.extensions
      .map((e) => `${e.signature} ${e.bytes.join(" ")}\n`)
      .join("")}\
-   ${gitIndex.checksum}`}
+   ${gitIndex.checksum}`,
+  ].map((c) => c.charCodeAt(0))}
+  {showAscii}
 />

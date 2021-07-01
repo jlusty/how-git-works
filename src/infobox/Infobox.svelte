@@ -11,12 +11,14 @@
   import type { GitFile } from "./parseFile";
 
   let file: GitFile;
+  let showAscii = true;
   let parsedWithZlib = false;
   let parsedTree = false;
   let parsedIndex = false;
   let infoboxContents = "";
 
   const unsubscribe = filename.subscribe((value) => {
+    showAscii = true;
     parsedWithZlib = false;
     parsedTree = false;
     parsedIndex = false;
@@ -66,6 +68,8 @@
 
 <div class="button-row">
   <NavigationButtons />
+  <p class="toggle-label">show ascii:</p>
+  <Toggle bind:toggled={showAscii} hideLabel class="no-margin" />
   {#if file?.zlibParsed}
     <p class="toggle-label">zlib decoded:</p>
     <Toggle bind:toggled={parsedWithZlib} hideLabel class="no-margin" />
@@ -73,7 +77,7 @@
       <p class="toggle-label">tree parsed:</p>
       <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
     {/if}
-  {:else if file?.contents.str.substr(0, 4) === "DIRC"}
+  {:else if file?.contents.str.substring(0, 4) === "DIRC"}
     <p class="toggle-label">index parsed:</p>
     <Toggle bind:toggled={parsedIndex} hideLabel class="no-margin" />
   {/if}
@@ -82,12 +86,15 @@
   <h4>{$filename.replace(`${$foldername}\\`, "")}</h4>
   <div class="scrolling-box">
     {#if parsedTree}
-      <GitTreeComponent zlibBuf={file.zlibParsed.buf} />
+      <GitTreeComponent zlibBuf={file.zlibParsed.buf} {showAscii} />
     {:else if parsedIndex}
-      <GitIndexComponent contentBuf={file.contents.buf} />
+      <GitIndexComponent contentBuf={file.contents.buf} {showAscii} />
     {:else}
       <HyperlinkHashes
-        textStr={parsedWithZlib ? file.zlibParsed.str : infoboxContents}
+        bytes={parsedWithZlib
+          ? [...file.zlibParsed.buf]
+          : [...file.contents.buf]}
+        {showAscii}
       />
     {/if}
   </div>

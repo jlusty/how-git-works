@@ -1,13 +1,17 @@
 <script lang="ts">
   import { foldername, filename } from "../stores";
 
-  export let textStr: string = "";
+  export let bytes: number[] | undefined = undefined;
+  export let showAscii: boolean = false;
 
-  const findHashes = (str: string): number[] => {
+  const findHashes = (bytes: number[]): number[] => {
     const hashLocations = [];
     let validHashLength = 0;
-    for (let i = 0; i < str.length; i++) {
-      if ("0123456789abcdef".includes(str[i])) {
+    for (let i = 0; i < bytes.length; i++) {
+      if (
+        (bytes[i] >= 48 && bytes[i] <= 57) || // 0123456789
+        (bytes[i] >= 97 && bytes[i] <= 102) // abcdef
+      ) {
         validHashLength++;
       } else {
         validHashLength = 0;
@@ -20,43 +24,60 @@
     return hashLocations;
   };
 
-  const splitAtHashes = (str: string, hashLocations: number[]) => {
-    const textArr = [];
+  const splitAtHashes = (bytes: number[], hashLocations: number[]) => {
+    const byteGroupsArr: { bytes: number[]; isHash: boolean }[] = [];
     if (hashLocations[0] !== 0) {
-      textArr.push({ text: str.substr(0, hashLocations[0]), isHash: false });
+      byteGroupsArr.push({
+        bytes: bytes.slice(0, hashLocations[0]),
+        isHash: false,
+      });
     }
     for (let i = 0; i < hashLocations.length; i++) {
-      textArr.push({
-        text: str.substring(hashLocations[i], hashLocations[i] + 40),
+      byteGroupsArr.push({
+        bytes: bytes.slice(hashLocations[i], hashLocations[i] + 40),
         isHash: true,
       });
       if (
-        hashLocations[i] + 40 !== str.length &&
+        hashLocations[i] + 40 !== bytes.length &&
         hashLocations[i] + 40 !== hashLocations[i + 1]
       ) {
-        textArr.push({
-          text: str.substring(hashLocations[i] + 40, hashLocations[i + 1]),
+        byteGroupsArr.push({
+          bytes: bytes.slice(hashLocations[i] + 40, hashLocations[i + 1]),
           isHash: false,
         });
       }
     }
-    return textArr;
+    return byteGroupsArr;
   };
 
-  const isPrintableASCII = (str: string) => /^(\x0A|[\x20-\x7F])*$/.test(str);
+  const isPrintableASCII = (str: string) =>
+    /^(\x09|\x0A|[\x20-\x7F])*$/.test(str);
+
+  const isBytePrintableASCII = (byte: number) =>
+    byte === 0x9 || byte === 0xa || (byte >= 0x20 && byte <= 0x7f);
 
   const nullBytesCodeTags = (str: string) =>
     [...str]
       .map((c) => (isPrintableASCII(c) ? c : `<code>${c.charCodeAt(0)}</code>`))
       .join("");
 
-  const goToObject = (hash: string) => {
-    const fullPath = `${$foldername}\\objects\\${hash.substr(
-      0,
-      2
-    )}\\${hash.substr(2)}`;
+  const fullObjectPath = (hashBytes: number[]) =>
+    `${$foldername}\\objects\\${String.fromCharCode(
+      ...hashBytes.slice(0, 2)
+    )}\\${String.fromCharCode(...hashBytes.slice(2))}`;
+
+  const goToObject = (hashBytes: number[]) => {
+    const fullPath = fullObjectPath(hashBytes);
     filename.set(fullPath);
   };
+
+  const escapeHtml = (unsafe: string) =>
+    unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
 </script>
 
 <style>
@@ -74,14 +95,21 @@
 </style>
 
 <p>
-  {#each splitAtHashes(textStr, findHashes(textStr)) as s}
+  {#each splitAtHashes(bytes, findHashes(bytes)) as s}
     {#if s.isHash}
       <a
-        href={`${$foldername}\\objects\\${s.text.substr(0, 2)}\\${s.text.substr(
-          2
-        )}`}
-        on:click|preventDefault={() => goToObject(s.text)}>{s.text}</a
+        href={fullObjectPath(s.bytes)}
+        on:click|preventDefault={() => goToObject(s.bytes)}
+        >{String.fromCharCode(...s.bytes)}</a
       >
-    {:else}{@html nullBytesCodeTags(s.text)}{/if}
+    {:else}{@html s.bytes
+        .map((b) =>
+          showAscii
+            ? isBytePrintableASCII(b)
+              ? escapeHtml(String.fromCharCode(b))
+              : `<code>${b < 16 ? "0" : ""}${b.toString(16)}</code>`
+            : `<code>${b < 16 ? "0" : ""}${b.toString(16)}</code>`
+        )
+        .join("")}{/if}
   {/each}
 </p>
