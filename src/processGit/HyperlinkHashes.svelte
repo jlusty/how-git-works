@@ -43,8 +43,12 @@
     return textArr;
   };
 
+  const isPrintableASCII = (str: string) => /^(\x0A|[\x20-\x7F])*$/.test(str);
+
   const nullBytesCodeTags = (str: string) =>
-    [...str].map((c) => (c === "\0" ? "<code>\\0</code>" : c)).join("");
+    [...str]
+      .map((c) => (isPrintableASCII(c) ? c : `<code>${c.charCodeAt(0)}</code>`))
+      .join("");
 
   const goToObject = (hash: string) => {
     const fullPath = `${$foldername}\\objects\\${hash.substr(
