@@ -43,6 +43,9 @@
     return textArr;
   };
 
+  const nullBytesCodeTags = (str: string) =>
+    [...str].map((c) => (c === "\0" ? "<code>\\0</code>" : c)).join("");
+
   const goToObject = (hash: string) => {
     const fullPath = `${$foldername}\\objects\\${hash.substr(
       0,
@@ -58,6 +61,12 @@
     text-align: left;
     word-break: break-all;
   }
+
+  p :global(code) {
+    background-color: #f8f9fa;
+    color: #000;
+    border: 1px solid #eaecf0;
+  }
 </style>
 
 <p>
@@ -69,6 +78,6 @@
         )}`}
         on:click|preventDefault={() => goToObject(s.text)}>{s.text}</a
       >
-    {:else}{s.text}{/if}
+    {:else}{@html nullBytesCodeTags(s.text)}{/if}
   {/each}
 </p>
