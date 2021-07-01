@@ -11,7 +11,8 @@ export interface GitFile {
 }
 
 const parseFile = (fileBuf: Buffer): GitFile => {
-  const zlibBuf = parseZlib(fileBuf);
+  const str = fileBuf.toString();
+  const zlibBuf = str.length === 0 ? null : parseZlib(fileBuf);
   let zlibStr: string;
   let type = null;
   if (zlibBuf) {
@@ -19,7 +20,7 @@ const parseFile = (fileBuf: Buffer): GitFile => {
     type = zlibStr.split(" ")[0];
   }
   return {
-    contents: { buf: fileBuf, str: fileBuf.toString() },
+    contents: { buf: fileBuf, str },
     zlibParsed: zlibBuf ? { buf: zlibBuf, str: zlibStr } : null,
     type,
   };
