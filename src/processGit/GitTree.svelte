@@ -10,4 +10,5 @@
 <HyperlinkHashes
   textStr={`${gitTree.name} ${gitTree.length}\n${gitTree.files
     .map((f) => `${f.type} ${f.name} ${f.hash}\n`)
-    .join('')}`} />
+    .join("")}`}
+/>

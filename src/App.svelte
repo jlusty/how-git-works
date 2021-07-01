@@ -62,10 +62,12 @@
 <main
   on:mousemove={handleMousemove}
   on:mouseup={handleMouseup}
-  class={mousedown ? 'select-text-disabled' : ''}>
+  class={mousedown ? "select-text-disabled" : ""}
+>
   <div
     class="filesSelector"
-    style="flex: 0 0 {dynamicBoxWidth}px; width: {dynamicBoxWidth}px;">
+    style="flex: 0 0 {dynamicBoxWidth}px; width: {dynamicBoxWidth}px;"
+  >
     <FolderButton />
     <Filesystem />
   </div>

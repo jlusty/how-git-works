@@ -45,11 +45,12 @@
 </style>
 
 <div>
-  <button
-    on:click={handleBackClick}
-    disabled={$fileHistory.position === 0}><ArrowLeftIcon size="14" /></button>
+  <button on:click={handleBackClick} disabled={$fileHistory.position === 0}
+    ><ArrowLeftIcon size="14" /></button
+  >
   <button
     on:click={handleForwardClick}
-    disabled={$fileHistory.position === $fileHistory.history.length - 1}><ArrowRightIcon
-      size="14" /></button>
+    disabled={$fileHistory.position === $fileHistory.history.length - 1}
+    ><ArrowRightIcon size="14" /></button
+  >
 </div>

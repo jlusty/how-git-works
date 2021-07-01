@@ -64,8 +64,11 @@
   {#each splitAtHashes(textStr, findHashes(textStr)) as s}
     {#if s.isHash}
       <a
-        href={`${$foldername}\\objects\\${s.text.substr(0, 2)}\\${s.text.substr(2)}`}
-        on:click|preventDefault={() => goToObject(s.text)}>{s.text}</a>
+        href={`${$foldername}\\objects\\${s.text.substr(0, 2)}\\${s.text.substr(
+          2
+        )}`}
+        on:click|preventDefault={() => goToObject(s.text)}>{s.text}</a
+      >
     {:else}{s.text}{/if}
   {/each}
 </p>

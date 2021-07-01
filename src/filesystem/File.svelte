@@ -38,7 +38,8 @@
   on:click={handleClick}
   class:active={hovering}
   on:mouseenter={enter}
-  on:mouseleave={leave}>
+  on:mouseleave={leave}
+>
   <div class="padded-icon">
     <FileIcon size="12" />
   </div>

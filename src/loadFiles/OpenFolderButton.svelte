@@ -24,7 +24,9 @@
 </style>
 
 <div class="button-row">
-  <button on:click={handleClick} class="open-folder-button">Open a folder</button>
+  <button on:click={handleClick} class="open-folder-button"
+    >Open a folder</button
+  >
   <RefreshFolder />
 </div>
 <p>{$foldername}</p>

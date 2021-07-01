@@ -69,17 +69,17 @@
   {#if file?.zlibParsed}
     <p class="toggle-label">zlib decoded:</p>
     <Toggle bind:toggled={parsedWithZlib} hideLabel class="no-margin" />
-    {#if parsedWithZlib && file.type === 'tree'}
+    {#if parsedWithZlib && file.type === "tree"}
       <p class="toggle-label">tree parsed:</p>
       <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
     {/if}
-  {:else if file?.contents.str.substr(0, 4) === 'DIRC'}
+  {:else if file?.contents.str.substr(0, 4) === "DIRC"}
     <p class="toggle-label">index parsed:</p>
     <Toggle bind:toggled={parsedIndex} hideLabel class="no-margin" />
   {/if}
 </div>
 {#if $filename.length > 0}
-  <h4>{$filename.replace(`${$foldername}\\`, '')}</h4>
+  <h4>{$filename.replace(`${$foldername}\\`, "")}</h4>
   <div class="scrolling-box">
     {#if parsedTree}
       <GitTreeComponent zlibBuf={file.zlibParsed.buf} />
@@ -87,7 +87,8 @@
       <GitIndexComponent contentBuf={file.contents.buf} />
     {:else}
       <HyperlinkHashes
-        textStr={parsedWithZlib ? file.zlibParsed.str : infoboxContents} />
+        textStr={parsedWithZlib ? file.zlibParsed.str : infoboxContents}
+      />
     {/if}
   </div>
 {:else}
