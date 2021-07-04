@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { access } from "fs";
-
   export let binaryData: number[] = [];
   export let rowWidth: number = 10;
 
@@ -24,8 +22,7 @@
   const byteToChar = (b: number) =>
     isBytePrintableASCII(b) ? String.fromCharCode(b) : ".";
 
-  const isBytePrintableASCII = (byte: number) =>
-    byte === 0xa || (byte >= 0x20 && byte <= 0x7f);
+  const isBytePrintableASCII = (byte: number) => byte >= 0x20 && byte <= 0x7f;
 
   const setSelectedByteIdx = (byteIdx: number) => {
     selectedByteIdx = byteIdx;
@@ -55,7 +52,7 @@
 
   .hex-byte {
     font-size: small;
-    margin: 0 5px;
+    padding: 0 5px;
   }
 
   .char-byte {
@@ -64,6 +61,10 @@
 
   .byte-row {
     margin: 2px 0;
+  }
+
+  .selected {
+    background-color: #bebebe;
   }
 </style>
 
@@ -74,6 +75,7 @@
         {#each row as byte, i}
           <span
             class="hex-byte"
+            class:selected={selectedByteIdx === rowIdx * rowWidth + i}
             on:mouseenter={() => setSelectedByteIdx(rowIdx * rowWidth + i)}
             on:mouseleave={unsetSelectedByteIdx}>{byteToHex(byte)}</span
           >
@@ -83,10 +85,15 @@
   </div>
   <div class="vertical-line" />
   <div class="all-bytes">
-    {#each dataRows as row}
+    {#each dataRows as row, rowIdx}
       <div class="byte-row">
-        {#each row as byte}
-          <span class="char-byte">{byteToChar(byte)}</span>
+        {#each row as byte, i}
+          <span
+            class="char-byte"
+            class:selected={selectedByteIdx === rowIdx * rowWidth + i}
+            on:mouseenter={() => setSelectedByteIdx(rowIdx * rowWidth + i)}
+            on:mouseleave={unsetSelectedByteIdx}>{byteToChar(byte)}</span
+          >
         {/each}
       </div>
     {/each}
