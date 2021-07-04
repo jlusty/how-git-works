@@ -9,6 +9,7 @@
   import HyperlinkHashes from "../processGit/HyperlinkHashes.svelte";
   import { parseFile } from "./parseFile";
   import type { GitFile } from "./parseFile";
+  import HexViewer from "./HexViewer.svelte";
 
   let file: GitFile;
   let showAscii = true;
@@ -97,6 +98,11 @@
         {showAscii}
       />
     {/if}
+    <HexViewer
+      binaryData={parsedWithZlib
+        ? [...file.zlibParsed.buf]
+        : [...file.contents.buf]}
+    />
   </div>
 {:else}
   <p>No file opened</p>
