@@ -97,28 +97,28 @@
   }
 
   .selected {
-    background-color: #bebebe;
+    background-color: rgba(var(--highlight-color), 0.2);
   }
 
   .highlighted-left {
-    box-shadow: 1px 0 0 0 var(--highlight-color) inset,
-      0 1px 0 0 var(--highlight-color) inset,
-      0 -1px 0 0 var(--highlight-color) inset;
+    box-shadow: 1px 0 0 0 rgb(var(--highlight-color)) inset,
+      0 1px 0 0 rgb(var(--highlight-color)) inset,
+      0 -1px 0 0 rgb(var(--highlight-color)) inset;
   }
   .highlighted-middle {
-    box-shadow: 0 1px 0 0 var(--highlight-color) inset,
-      0 -1px 0 0 var(--highlight-color) inset;
+    box-shadow: 0 1px 0 0 rgb(var(--highlight-color)) inset,
+      0 -1px 0 0 rgb(var(--highlight-color)) inset;
   }
   .highlighted-right {
-    box-shadow: -1px 0 0 0 var(--highlight-color) inset,
-      0 1px 0 0 var(--highlight-color) inset,
-      0 -1px 0 0 var(--highlight-color) inset;
+    box-shadow: -1px 0 0 0 rgb(var(--highlight-color)) inset,
+      0 1px 0 0 rgb(var(--highlight-color)) inset,
+      0 -1px 0 0 rgb(var(--highlight-color)) inset;
   }
   .highlighted-single {
-    box-shadow: 1px 0 0 0 var(--highlight-color) inset,
-      -1px 0 0 0 var(--highlight-color) inset,
-      0 1px 0 0 var(--highlight-color) inset,
-      0 -1px 0 0 var(--highlight-color) inset;
+    box-shadow: 1px 0 0 0 rgb(var(--highlight-color)) inset,
+      -1px 0 0 0 rgb(var(--highlight-color)) inset,
+      0 1px 0 0 rgb(var(--highlight-color)) inset,
+      0 -1px 0 0 rgb(var(--highlight-color)) inset;
   }
 </style>
 
@@ -132,7 +132,7 @@
           style="{byteStyle} max-width: {byteWidthPx}px; --highlight-color: {byteIsHighlighted(
             rowIdx * rowWidth + i,
             highlightedBytes
-          )?.color}"
+          )?.color ?? '100, 100, 100'}"
           class:selected={selectedByteIdx === rowIdx * rowWidth + i}
           on:mouseenter={() => setSelectedByteIdx(rowIdx * rowWidth + i)}
           on:mouseleave={unsetSelectedByteIdx}>{byte}</span
