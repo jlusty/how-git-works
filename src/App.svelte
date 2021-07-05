@@ -19,11 +19,14 @@
   .filesSelector {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1;
   }
 
-  .column {
+  .infoBox {
     padding-left: 50px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 </style>
 
@@ -33,7 +36,7 @@
       <FolderButton />
       <Filesystem />
     </div>
-    <div class="column" slot="right">
+    <div class="infoBox" slot="right">
       <Infobox />
     </div>
   </ResizableSplit>

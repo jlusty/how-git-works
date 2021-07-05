@@ -34,29 +34,24 @@
 
 <style>
   .resizeParent {
-    text-align: left;
-    padding: 15px;
-    margin: 0 auto;
-    background-color: #ffffff;
     display: flex;
-    width: 95%;
-    height: 95%;
+    width: 100%;
   }
 
   .select-text-disabled {
     user-select: none;
   }
 
+  .resizeBar {
+    background-color: grey;
+    cursor: w-resize;
+  }
+
   .column {
     display: flex;
     flex-direction: column;
     flex: 1;
-  }
-
-  .resizeBar {
-    background-color: grey;
-    height: 100%;
-    cursor: w-resize;
+    width: 100%;
   }
 </style>
 
@@ -65,7 +60,10 @@
   on:mouseup={handleMouseup}
   class={`resizeParent ${mousedown ? "select-text-disabled" : ""}`}
 >
-  <div style="flex: 0 0 {leftSlotWidth}px; width: {leftSlotWidth}px;">
+  <div
+    class="column"
+    style="flex: 0 0 {leftSlotWidth}px; width: {leftSlotWidth}px;"
+  >
     <slot name="left" />
   </div>
   <div

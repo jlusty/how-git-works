@@ -52,7 +52,7 @@
 <style>
   .hex-viewer-wrapper {
     display: flex;
-    height: 50%;
+    flex: 1;
   }
 
   .all-bytes {

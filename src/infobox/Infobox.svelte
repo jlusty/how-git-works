@@ -44,8 +44,11 @@
 
 <style>
   .scrolling-box {
+    display: flex;
+    flex-direction: column;
     overflow-y: scroll;
-    height: 95%;
+    flex: 1 1 auto;
+    min-height: 100px;
   }
 
   .button-row {
@@ -98,12 +101,12 @@
         {showAscii}
       />
     {/if}
-    <HexInfoBox
-      binaryData={parsedWithZlib
-        ? [...file.zlibParsed.buf]
-        : [...file.contents.buf]}
-    />
   </div>
+  <HexInfoBox
+    binaryData={parsedWithZlib
+      ? [...file.zlibParsed.buf]
+      : [...file.contents.buf]}
+  />
 {:else}
   <p>No file opened</p>
 {/if}

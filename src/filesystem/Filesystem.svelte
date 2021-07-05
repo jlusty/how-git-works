@@ -21,8 +21,9 @@
 
   .scrolling-box {
     overflow-y: scroll;
-    height: 95%;
+    flex: 1 1 auto;
     overflow-x: auto;
+    height: 0;
   }
 </style>
 

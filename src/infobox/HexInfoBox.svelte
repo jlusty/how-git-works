@@ -10,7 +10,8 @@
 <style>
   .scrolling-box {
     overflow-y: scroll;
-    height: 95%;
+    flex: 1 1 auto;
+    min-height: 100px;
   }
 
   .button-row {
