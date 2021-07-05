@@ -4,6 +4,7 @@
   // Expose width of left box (in px)
   export let onWidthChange = (px: number) => {};
   export let leftSlotWidth = 250;
+  export let minLeftSlotWidth = 0;
 
   $: onWidthChange(leftSlotWidth);
 
@@ -23,7 +24,10 @@
 
   const handleMousemove = (event: MouseEvent) => {
     if (mousedown) {
-      leftSlotWidth = staticLeftSlotWidth + (event.clientX - resizeStartX);
+      leftSlotWidth = Math.max(
+        staticLeftSlotWidth + (event.clientX - resizeStartX),
+        minLeftSlotWidth
+      );
     }
   };
 </script>

@@ -7,7 +7,7 @@
   let selectedByteIdx: number | undefined = undefined;
 
   const byteWidthPx = 26;
-  $: rowWidth = Math.floor(leftWidthPx / byteWidthPx);
+  $: rowWidth = Math.max(Math.floor(leftWidthPx / byteWidthPx), 1);
   $: dataRows = getDataRows(binaryData, rowWidth);
 
   const getDataRows = (binaryData: number[], rowWidth: number) => {
@@ -83,6 +83,7 @@
     }}
     leftSlotWidth={leftWidthPx}
     resizeBarWidth={3}
+    minLeftSlotWidth={30}
   >
     <div class="all-bytes" slot="left">
       {#each dataRows as row, rowIdx}
