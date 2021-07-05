@@ -29,10 +29,23 @@
   const isBytePrintableASCII = (byte: number) => byte >= 0x20 && byte <= 0x7f;
 
   const setSelectedByteIdx = (byteIdx: number) => {
-    selectedByteIdx = byteIdx;
+    if (!mousedown) {
+      selectedByteIdx = byteIdx;
+    }
   };
   const unsetSelectedByteIdx = () => {
+    if (!mousedown) {
+      selectedByteIdx = undefined;
+    }
+  };
+
+  let mousedown = false;
+  const handleMousedown = () => {
     selectedByteIdx = undefined;
+    mousedown = true;
+  };
+  const handleMouseup = () => {
+    mousedown = false;
   };
 </script>
 
@@ -76,7 +89,11 @@
   }
 </style>
 
-<div class="hex-viewer-wrapper">
+<div
+  class="hex-viewer-wrapper"
+  on:mousedown={handleMousedown}
+  on:mouseup={handleMouseup}
+>
   <ResizableSplit
     onWidthChange={(px) => {
       leftWidthPx = px;
