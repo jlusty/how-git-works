@@ -1,9 +1,13 @@
 <script lang="ts">
+  import ResizableSplit from "../ResizableSplit.svelte";
+
   export let binaryData: number[] = [];
-  export let rowWidth: number = 10;
+  let leftWidthPx: number = 250;
 
   let selectedByteIdx: number | undefined = undefined;
 
+  const byteWidthPx = 26;
+  $: rowWidth = Math.floor(leftWidthPx / byteWidthPx);
   $: dataRows = getDataRows(binaryData, rowWidth);
 
   const getDataRows = (binaryData: number[], rowWidth: number) => {
@@ -33,13 +37,6 @@
 </script>
 
 <style>
-  .vertical-line {
-    width: 1px;
-    background-color: grey;
-    height: 100%;
-    margin: 0 10px;
-  }
-
   .hex-viewer-wrapper {
     display: flex;
     height: 50%;
@@ -50,17 +47,28 @@
     flex-direction: column;
   }
 
+  .right-padding {
+    padding-left: 20px;
+  }
+
   .hex-byte {
-    font-size: small;
+    min-width: 10px;
     padding: 0 5px;
   }
 
   .char-byte {
-    font-size: small;
+    min-width: 5px;
   }
 
   .byte-row {
+    font-size: small;
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: clip;
     margin: 2px 0;
+  }
+  .byte-row span {
+    display: inline-block;
   }
 
   .selected {
@@ -69,33 +77,41 @@
 </style>
 
 <div class="hex-viewer-wrapper">
-  <div class="all-bytes">
-    {#each dataRows as row, rowIdx}
-      <div class="byte-row">
-        {#each row as byte, i}
-          <span
-            class="hex-byte"
-            class:selected={selectedByteIdx === rowIdx * rowWidth + i}
-            on:mouseenter={() => setSelectedByteIdx(rowIdx * rowWidth + i)}
-            on:mouseleave={unsetSelectedByteIdx}>{byteToHex(byte)}</span
-          >
-        {/each}
-      </div>
-    {/each}
-  </div>
-  <div class="vertical-line" />
-  <div class="all-bytes">
-    {#each dataRows as row, rowIdx}
-      <div class="byte-row">
-        {#each row as byte, i}
-          <span
-            class="char-byte"
-            class:selected={selectedByteIdx === rowIdx * rowWidth + i}
-            on:mouseenter={() => setSelectedByteIdx(rowIdx * rowWidth + i)}
-            on:mouseleave={unsetSelectedByteIdx}>{byteToChar(byte)}</span
-          >
-        {/each}
-      </div>
-    {/each}
-  </div>
+  <ResizableSplit
+    onWidthChange={(px) => {
+      leftWidthPx = px;
+    }}
+    leftSlotWidth={leftWidthPx}
+    resizeBarWidth={3}
+  >
+    <div class="all-bytes" slot="left">
+      {#each dataRows as row, rowIdx}
+        <div class="byte-row">
+          {#each row as byte, i}
+            <span
+              class="hex-byte"
+              style="max-width: {byteWidthPx}px;"
+              class:selected={selectedByteIdx === rowIdx * rowWidth + i}
+              on:mouseenter={() => setSelectedByteIdx(rowIdx * rowWidth + i)}
+              on:mouseleave={unsetSelectedByteIdx}>{byteToHex(byte)}</span
+            >
+          {/each}
+        </div>
+      {/each}
+    </div>
+    <div class="all-bytes right-padding" slot="right">
+      {#each dataRows as row, rowIdx}
+        <div class="byte-row">
+          {#each row as byte, i}
+            <span
+              class="char-byte"
+              class:selected={selectedByteIdx === rowIdx * rowWidth + i}
+              on:mouseenter={() => setSelectedByteIdx(rowIdx * rowWidth + i)}
+              on:mouseleave={unsetSelectedByteIdx}>{byteToChar(byte)}</span
+            >
+          {/each}
+        </div>
+      {/each}
+    </div>
+  </ResizableSplit>
 </div>

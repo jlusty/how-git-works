@@ -9,7 +9,7 @@
   import HyperlinkHashes from "../processGit/HyperlinkHashes.svelte";
   import { parseFile } from "./parseFile";
   import type { GitFile } from "./parseFile";
-  import HexViewer from "./HexViewer.svelte";
+  import HexInfoBox from "./HexInfoBox.svelte";
 
   let file: GitFile;
   let showAscii = true;
@@ -98,7 +98,7 @@
         {showAscii}
       />
     {/if}
-    <HexViewer
+    <HexInfoBox
       binaryData={parsedWithZlib
         ? [...file.zlibParsed.buf]
         : [...file.contents.buf]}

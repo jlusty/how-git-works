@@ -1,6 +1,14 @@
 <script lang="ts">
-  let staticBoxWidth = 250;
-  let dynamicBoxWidth = staticBoxWidth;
+  export let resizeBarWidth = 4;
+
+  // Expose width of left box (in px)
+  export let onWidthChange = (px: number) => {};
+  export let leftSlotWidth = 250;
+
+  $: onWidthChange(leftSlotWidth);
+
+  // Handle resizing
+  let staticLeftSlotWidth = leftSlotWidth;
   let resizeStartX: number;
   let mousedown = false;
 
@@ -10,18 +18,18 @@
   };
   const handleMouseup = () => {
     mousedown = false;
-    staticBoxWidth = dynamicBoxWidth;
+    staticLeftSlotWidth = leftSlotWidth;
   };
 
   const handleMousemove = (event: MouseEvent) => {
     if (mousedown) {
-      dynamicBoxWidth = staticBoxWidth + (event.clientX - resizeStartX);
+      leftSlotWidth = staticLeftSlotWidth + (event.clientX - resizeStartX);
     }
   };
 </script>
 
 <style>
-  main {
+  .resizeParent {
     text-align: left;
     padding: 15px;
     margin: 0 auto;
@@ -38,7 +46,6 @@
   .column {
     display: flex;
     flex-direction: column;
-    padding-left: 50px;
     flex: 1;
   }
 
@@ -46,20 +53,23 @@
     background-color: grey;
     height: 100%;
     cursor: w-resize;
-    flex: 0 0 4px;
   }
 </style>
 
-<main
+<div
   on:mousemove={handleMousemove}
   on:mouseup={handleMouseup}
-  class={mousedown ? "select-text-disabled" : ""}
+  class={`resizeParent ${mousedown ? "select-text-disabled" : ""}`}
 >
-  <div style="flex: 0 0 {dynamicBoxWidth}px; width: {dynamicBoxWidth}px;">
+  <div style="flex: 0 0 {leftSlotWidth}px; width: {leftSlotWidth}px;">
     <slot name="left" />
   </div>
-  <div class="resizeBar" on:mousedown={handleMousedown} />
+  <div
+    class="resizeBar"
+    style="flex: 0 0 {resizeBarWidth}px;"
+    on:mousedown={handleMousedown}
+  />
   <div class="column">
     <slot name="right" />
   </div>
-</main>
+</div>

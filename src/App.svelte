@@ -21,6 +21,10 @@
     flex-direction: column;
     height: 100%;
   }
+
+  .column {
+    padding-left: 50px;
+  }
 </style>
 
 <main>
@@ -29,6 +33,8 @@
       <FolderButton />
       <Filesystem />
     </div>
-    <Infobox slot="right" />
+    <div class="column" slot="right">
+      <Infobox />
+    </div>
   </ResizableSplit>
 </main>
