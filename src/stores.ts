@@ -18,3 +18,5 @@ filename.subscribe((value) => {
 foldername.subscribe((value) => {
   localStorage.setItem("foldername", value ?? "");
 });
+
+export const mousedown = writable(false);

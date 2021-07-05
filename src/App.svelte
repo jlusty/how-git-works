@@ -3,6 +3,14 @@
   import Filesystem from "./filesystem/Filesystem.svelte";
   import Infobox from "./infobox/Infobox.svelte";
   import ResizableSplit from "./ResizableSplit.svelte";
+  import { mousedown } from "./stores";
+
+  const handleMousedown = () => {
+    mousedown.set(true);
+  };
+  const handleMouseup = () => {
+    mousedown.set(false);
+  };
 </script>
 
 <style>
@@ -30,7 +38,7 @@
   }
 </style>
 
-<main>
+<main on:mousedown={handleMousedown} on:mouseup={handleMouseup}>
   <ResizableSplit>
     <div class="filesSelector" slot="left">
       <FolderButton />

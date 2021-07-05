@@ -1,5 +1,6 @@
 <script lang="ts">
   import ResizableSplit from "../ResizableSplit.svelte";
+  import { mousedown } from "../stores";
 
   export let binaryData: number[] = [];
   let leftWidthPx: number = 250;
@@ -29,24 +30,19 @@
   const isBytePrintableASCII = (byte: number) => byte >= 0x20 && byte <= 0x7f;
 
   const setSelectedByteIdx = (byteIdx: number) => {
-    if (!mousedown) {
+    if (!$mousedown) {
       selectedByteIdx = byteIdx;
     }
   };
   const unsetSelectedByteIdx = () => {
-    if (!mousedown) {
+    if (!$mousedown) {
       selectedByteIdx = undefined;
     }
   };
 
-  let mousedown = false;
-  const handleMousedown = () => {
+  $: if ($mousedown) {
     selectedByteIdx = undefined;
-    mousedown = true;
-  };
-  const handleMouseup = () => {
-    mousedown = false;
-  };
+  }
 </script>
 
 <style>
@@ -89,11 +85,7 @@
   }
 </style>
 
-<div
-  class="hex-viewer-wrapper"
-  on:mousedown={handleMousedown}
-  on:mouseup={handleMouseup}
->
+<div class="hex-viewer-wrapper">
   <ResizableSplit
     onWidthChange={(px) => {
       leftWidthPx = px;
