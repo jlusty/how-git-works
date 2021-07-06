@@ -1,11 +1,16 @@
 <script lang="ts">
-  import Toggle from "svelte-toggle";
   import HyperlinkHashes from "./HyperlinkHashes.svelte";
   import HexViewer from "./HexViewer.svelte";
+  import type { ObjectType } from "../processGit/highlightedBytes";
+  import { possibleHighlights } from "../processGit/highlightedBytes";
 
   export let binaryData: number[] = [];
+  export let showHex = true;
+  export let objectType: ObjectType | null = null;
 
-  let showHex = true;
+  $: highlightedBytes = objectType
+    ? possibleHighlights[objectType](binaryData)
+    : [];
 </script>
 
 <style>
@@ -15,24 +20,10 @@
     min-height: 100px;
   }
 
-  .button-row {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 0;
-    flex: 0 0 45px;
-  }
-
   :global(.no-margin) {
     padding: 0;
     margin: 0;
   }
-
-  .toggle-label {
-    font-size: small;
-    padding: 0 5px 0 20px;
-  }
-
   .break-lines {
     white-space: pre-line;
     text-align: left;
@@ -44,13 +35,9 @@
   }
 </style>
 
-<div class="button-row">
-  <p class="toggle-label">show hex:</p>
-  <Toggle bind:toggled={showHex} hideLabel class="no-margin" />
-</div>
 <div class="scrolling-box break-lines small-font">
   {#if showHex}
-    <HexViewer {binaryData} />
+    <HexViewer {binaryData} {highlightedBytes} />
   {:else}
     <HyperlinkHashes bytes={binaryData} />
   {/if}

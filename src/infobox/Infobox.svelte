@@ -3,21 +3,19 @@
   import Toggle from "svelte-toggle";
   import { readFile } from "../filesystem/filesystem";
   import { absoluteFilename, relativeFilename } from "../stores";
-  import GitTreeComponent from "../processGit/GitTree.svelte";
-  import GitIndexComponent from "../processGit/GitIndex.svelte";
   import NavigationButtons from "./NavigationButtons.svelte";
   import { parseFile } from "./parseFile";
   import type { GitFile } from "./parseFile";
   import HexInfoBox from "./HexInfoBox.svelte";
 
   let file: GitFile | null;
-  let showAscii = true;
+  let showHex = true;
   let parsedWithZlib = false;
   let parsedTree = false;
   let parsedIndex = false;
 
   const unsubscribe = absoluteFilename.subscribe((value) => {
-    showAscii = true;
+    showHex = true;
     parsedWithZlib = false;
     parsedTree = false;
     parsedIndex = false;
@@ -25,9 +23,6 @@
       const contents = readFile(value);
       if (contents) {
         file = parseFile(contents);
-        if (file.zlibParsed) {
-          parsedWithZlib = true;
-        }
       } else {
         file = null;
       }
@@ -61,16 +56,20 @@
 
 <div class="button-row">
   <NavigationButtons />
-  <p class="toggle-label">show ascii:</p>
-  <Toggle bind:toggled={showAscii} hideLabel class="no-margin" />
-  {#if file?.zlibParsed}
-    <p class="toggle-label">zlib decoded:</p>
-    <Toggle bind:toggled={parsedWithZlib} hideLabel class="no-margin" />
-    {#if parsedWithZlib && file.type === "tree"}
-      <p class="toggle-label">tree parsed:</p>
-      <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
-    {/if}
-  {:else if file?.contents.str.substring(0, 4) === "DIRC"}
+  <p class="toggle-label">show hex:</p>
+  <Toggle bind:toggled={showHex} hideLabel class="no-margin" />
+  <p class="toggle-label">decode zlib:</p>
+  <Toggle
+    disabled={!file?.zlibParsed}
+    bind:toggled={parsedWithZlib}
+    hideLabel
+    class="no-margin"
+  />
+  {#if parsedWithZlib && file.type === "tree"}
+    <p class="toggle-label">tree parsed:</p>
+    <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
+  {/if}
+  {#if file?.contents.str.substring(0, 4) === "DIRC"}
     <p class="toggle-label">index parsed:</p>
     <Toggle bind:toggled={parsedIndex} hideLabel class="no-margin" />
   {/if}
@@ -81,6 +80,8 @@
     binaryData={parsedWithZlib
       ? [...file.zlibParsed.buf]
       : [...file.contents.buf]}
+    {showHex}
+    objectType={parsedTree ? "tree" : null}
   />
 {:else}
   <p>No file opened</p>

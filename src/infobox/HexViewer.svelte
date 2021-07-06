@@ -6,10 +6,7 @@
 
   export let binaryData: number[] = [];
 
-  export let highlightedBytes: HighlightedByteRange[] = [
-    { start: 2, end: 4, color: "255, 0, 0" },
-    { start: 7, end: 12, color: "0, 0, 255" },
-  ];
+  export let highlightedBytes: HighlightedByteRange[] = [];
   let leftWidthPx: number = 250;
   let rowWidth: number;
 
@@ -30,6 +27,7 @@
   .hex-viewer-wrapper {
     display: flex;
     flex: 1;
+    margin: 10px 0;
   }
 </style>
 
