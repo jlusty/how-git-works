@@ -1,12 +1,12 @@
 <script lang="ts">
   import { FileIcon } from "svelte-feather-icons";
-  import { filename } from "../stores";
+  import { absoluteFilename } from "../stores";
 
   export let name: string;
   export let fullPath: string;
 
   function handleClick() {
-    filename.set(fullPath);
+    absoluteFilename.set(fullPath);
   }
 
   let hovering = false;

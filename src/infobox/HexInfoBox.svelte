@@ -1,5 +1,6 @@
 <script lang="ts">
   import Toggle from "svelte-toggle";
+  import HyperlinkHashes from "./HyperlinkHashes.svelte";
   import HexViewer from "./HexViewer.svelte";
 
   export let binaryData: number[] = [];
@@ -51,6 +52,6 @@
   {#if showHex}
     <HexViewer {binaryData} />
   {:else}
-    {String.fromCharCode(...binaryData)}
+    <HyperlinkHashes bytes={binaryData} />
   {/if}
 </div>

@@ -1,13 +1,24 @@
 import * as fs from "fs";
-import { writable } from "svelte/store";
+import { writable, derived } from "svelte/store";
 
-export const foldername = writable(localStorage.getItem("foldername") || "");
+export const openFolder = writable(localStorage.getItem("foldername") || "");
 export const filesystem = writable([]);
 
-export const filename = writable(localStorage.getItem("filename") || "");
+export const absoluteFilename = writable(
+  localStorage.getItem("filename") || ""
+);
+export const gitFolder = derived(absoluteFilename, ($absoluteFilename) =>
+  $absoluteFilename.substring(0, $absoluteFilename.indexOf(".git") + 4)
+);
+
+export const relativeFilename = derived(
+  [openFolder, absoluteFilename],
+  ([$openFolder, $absoluteFilename]) =>
+    $absoluteFilename.replace(`${$openFolder}\\`, "")
+);
 export const fileHistory = writable({ history: [], position: -1 });
 
-filename.subscribe((value) => {
+absoluteFilename.subscribe((value) => {
   if (fs.existsSync(value)) {
     localStorage.setItem("filename", value);
   } else {
@@ -15,7 +26,7 @@ filename.subscribe((value) => {
   }
 });
 
-foldername.subscribe((value) => {
+openFolder.subscribe((value) => {
   localStorage.setItem("foldername", value ?? "");
 });
 

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { RefreshCwIcon } from "svelte-feather-icons";
-  import { foldername } from "../stores";
+  import { openFolder } from "../stores";
 
   const handleClick = () => {
-    const currentFoler = $foldername;
-    foldername.set("");
-    foldername.set(currentFoler);
+    const currentFolder = $openFolder;
+    openFolder.set("");
+    openFolder.set(currentFolder);
   };
 </script>
 

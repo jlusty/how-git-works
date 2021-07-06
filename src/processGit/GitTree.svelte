@@ -1,9 +1,8 @@
 <script lang="ts">
   import { parseGitTree } from "./parseTree";
-  import HyperlinkHashes from "./HyperlinkHashes.svelte";
+  import HyperlinkHashes from "../infobox/HyperlinkHashes.svelte";
 
   export let zlibBuf: Buffer;
-  export let showAscii: boolean = false;
 
   const gitTree = parseGitTree(zlibBuf);
 </script>
@@ -14,5 +13,4 @@
       .map((f) => `${f.type} ${f.name} ${f.hash}\n`)
       .join("")}`,
   ].map((c) => c.charCodeAt(0))}
-  {showAscii}
 />

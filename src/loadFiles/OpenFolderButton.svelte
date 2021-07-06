@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ipcRenderer } from "electron";
-  import { foldername } from "../stores";
+  import { openFolder } from "../stores";
   import RefreshFolder from "./RefreshFolder.svelte";
 
   const handleClick = () => {
@@ -8,7 +8,7 @@
   };
 
   ipcRenderer.on("folder-opened", (_event, arg) => {
-    foldername.set(arg);
+    openFolder.set(arg);
   });
 </script>
 
@@ -29,4 +29,4 @@
   >
   <RefreshFolder />
 </div>
-<p>{$foldername}</p>
+<p>{$openFolder}</p>

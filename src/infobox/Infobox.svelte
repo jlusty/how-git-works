@@ -2,23 +2,21 @@
   import { onDestroy } from "svelte";
   import Toggle from "svelte-toggle";
   import { readFile } from "../filesystem/filesystem";
-  import { filename, foldername } from "../stores";
+  import { absoluteFilename, relativeFilename } from "../stores";
   import GitTreeComponent from "../processGit/GitTree.svelte";
   import GitIndexComponent from "../processGit/GitIndex.svelte";
   import NavigationButtons from "./NavigationButtons.svelte";
-  import HyperlinkHashes from "../processGit/HyperlinkHashes.svelte";
   import { parseFile } from "./parseFile";
   import type { GitFile } from "./parseFile";
   import HexInfoBox from "./HexInfoBox.svelte";
 
-  let file: GitFile;
+  let file: GitFile | null;
   let showAscii = true;
   let parsedWithZlib = false;
   let parsedTree = false;
   let parsedIndex = false;
-  let infoboxContents = "";
 
-  const unsubscribe = filename.subscribe((value) => {
+  const unsubscribe = absoluteFilename.subscribe((value) => {
     showAscii = true;
     parsedWithZlib = false;
     parsedTree = false;
@@ -27,12 +25,11 @@
       const contents = readFile(value);
       if (contents) {
         file = parseFile(contents);
-        infoboxContents = file.contents.str;
         if (file.zlibParsed) {
           parsedWithZlib = true;
         }
       } else {
-        infoboxContents = "!!! File not found !!!";
+        file = null;
       }
     }
   });
@@ -43,14 +40,6 @@
 </script>
 
 <style>
-  .scrolling-box {
-    display: flex;
-    flex-direction: column;
-    overflow-y: scroll;
-    flex: 1 1 auto;
-    min-height: 100px;
-  }
-
   .button-row {
     display: flex;
     flex-direction: row;
@@ -86,22 +75,8 @@
     <Toggle bind:toggled={parsedIndex} hideLabel class="no-margin" />
   {/if}
 </div>
-{#if $filename.length > 0}
-  <h4>{$filename.replace(`${$foldername}\\`, "")}</h4>
-  <div class="scrolling-box">
-    {#if parsedTree}
-      <GitTreeComponent zlibBuf={file.zlibParsed.buf} {showAscii} />
-    {:else if parsedIndex}
-      <GitIndexComponent contentBuf={file.contents.buf} {showAscii} />
-    {:else}
-      <HyperlinkHashes
-        bytes={parsedWithZlib
-          ? [...file.zlibParsed.buf]
-          : [...file.contents.buf]}
-        {showAscii}
-      />
-    {/if}
-  </div>
+{#if file}
+  <h4>{$relativeFilename}</h4>
   <HexInfoBox
     binaryData={parsedWithZlib
       ? [...file.zlibParsed.buf]

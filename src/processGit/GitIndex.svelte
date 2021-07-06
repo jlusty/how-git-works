@@ -1,9 +1,8 @@
 <script lang="ts">
   import { parseGitIndex } from "./parseIndex";
-  import HyperlinkHashes from "./HyperlinkHashes.svelte";
+  import HyperlinkHashes from "../infobox/HyperlinkHashes.svelte";
 
   export let contentBuf: Buffer;
-  export let showAscii: boolean = false;
 
   const gitIndex = parseGitIndex(contentBuf);
 </script>
@@ -26,5 +25,4 @@
      .join("")}\
    ${gitIndex.checksum}`,
   ].map((c) => c.charCodeAt(0))}
-  {showAscii}
 />

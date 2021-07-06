@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
   import { readFolderToFilesystem } from "./filesystem";
-  import { filesystem, foldername } from "../stores";
+  import { filesystem, openFolder } from "../stores";
   import Folder from "./Folder.svelte";
 
-  const unsubscribe = foldername.subscribe((value) => {
+  const unsubscribe = openFolder.subscribe((value) => {
     if (value.length > 0) {
       filesystem.set(readFolderToFilesystem(value));
     }
@@ -27,9 +27,9 @@
   }
 </style>
 
-{#if $foldername.length > 0}
+{#if $openFolder.length > 0}
   <div class="scrolling-box">
-    <Folder name={$foldername} files={$filesystem} expanded />
+    <Folder name={$openFolder} files={$filesystem} expanded />
     <br />
   </div>
 {:else}
