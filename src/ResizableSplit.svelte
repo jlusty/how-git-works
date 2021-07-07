@@ -1,10 +1,13 @@
 <script lang="ts">
+  import { slideHoriz } from "./infobox/slideHorizontal";
   export let resizeBarWidth = 4;
 
   // Expose width of left box (in px)
   export let onWidthChange = (px: number) => {};
   export let leftSlotWidth = 250;
   export let minLeftSlotWidth = 0;
+
+  export let hideLeft = false;
 
   $: onWidthChange(leftSlotWidth);
 
@@ -60,17 +63,21 @@
   on:mouseup={handleMouseup}
   class={`resizeParent ${mousedown ? "select-text-disabled" : ""}`}
 >
-  <div
-    class="column"
-    style="flex: 0 0 {leftSlotWidth}px; width: {leftSlotWidth}px;"
-  >
-    <slot name="left" />
-  </div>
-  <div
-    class="resizeBar"
-    style="flex: 0 0 {resizeBarWidth}px;"
-    on:mousedown={handleMousedown}
-  />
+  {#if !hideLeft}
+    <div
+      class="column"
+      style="flex: 0 0 {leftSlotWidth}px; width: {leftSlotWidth}px;"
+      transition:slideHoriz={{ duration: 1000 }}
+    >
+      <slot name="left" />
+    </div>
+    <div
+      class="resizeBar"
+      style="flex: 0 0 {resizeBarWidth}px;"
+      on:mousedown={handleMousedown}
+      transition:slideHoriz={{ duration: 1000 }}
+    />
+  {/if}
   <div class="column">
     <slot name="right" />
   </div>

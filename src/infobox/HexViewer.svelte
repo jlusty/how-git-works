@@ -10,6 +10,8 @@
   let leftWidthPx: number = 250;
   let rowWidth: number;
 
+  export let showHex: boolean = true;
+
   let selectedByteIdx: number | undefined = undefined;
 
   const byteToHex = (b: number) => `${b < 16 ? "0" : ""}${b.toString(16)}`;
@@ -39,6 +41,7 @@
     leftSlotWidth={leftWidthPx}
     resizeBarWidth={3}
     minLeftSlotWidth={30}
+    hideLeft={!showHex}
   >
     <ByteGrid
       slot="left"
