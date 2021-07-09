@@ -15,8 +15,9 @@
 
 <style>
   .scrolling-box {
+    display: flex;
     overflow-y: scroll;
-    flex: 1 1 auto;
+    flex: 1 0 0;
     min-height: 100px;
   }
 
@@ -36,9 +37,9 @@
 </style>
 
 <div class="scrolling-box break-lines small-font">
-  {#if showHex}
-    <HexViewer {binaryData} {highlightedBytes} />
-  {:else}
+  <!-- {#if showHex} -->
+  <HexViewer {binaryData} {highlightedBytes} {showHex} />
+  <!-- {:else}
     <HyperlinkHashes bytes={binaryData} />
-  {/if}
+  {/if} -->
 </div>

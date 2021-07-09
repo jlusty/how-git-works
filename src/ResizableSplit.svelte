@@ -8,6 +8,7 @@
   export let minLeftSlotWidth = 0;
 
   export let hideLeft = false;
+  export let leftFullyVisible = true;
 
   $: onWidthChange(leftSlotWidth);
 
@@ -68,8 +69,10 @@
       class="column"
       style="flex: 0 0 {leftSlotWidth}px; width: {leftSlotWidth}px;"
       transition:slideHoriz={{ duration: 1000 }}
+      on:outrostart={() => (leftFullyVisible = false)}
+      on:introend={() => (leftFullyVisible = true)}
     >
-      <slot name="left" />
+      <slot name="left" {leftSlotWidth} />
     </div>
     <div
       class="resizeBar"
@@ -79,6 +82,6 @@
     />
   {/if}
   <div class="column">
-    <slot name="right" />
+    <slot name="right" {leftFullyVisible} />
   </div>
 </div>

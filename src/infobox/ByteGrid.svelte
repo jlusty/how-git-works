@@ -3,6 +3,7 @@
   import type { HighlightedByteRange } from "./types";
 
   export let byteStyle: string;
+  export let byteRowStyle: string = "";
   export let style: string = "";
   export let byteArr: string[] = [];
 
@@ -12,14 +13,15 @@
     | "highlighted-right"
     | "highlighted-single";
   export let highlightedBytes: HighlightedByteRange[] = [];
-  export let leftWidthPx: number = 250;
+  export let fixedWidthPx: number = 250;
+  export let fixCurrentWidth: boolean = false;
 
   export let selectedByteIdx: number | undefined = undefined;
 
   export const byteWidthPx = 26;
   export let rowWidth: number;
-  $: rowWidth = Math.max(Math.floor(leftWidthPx / byteWidthPx), 1);
-  $: dataRows = getDataRows(byteArr, rowWidth);
+  $: rowWidth = Math.max(Math.floor(fixedWidthPx / byteWidthPx), 1);
+  $: dataRows = fixCurrentWidth ? [byteArr] : getDataRows(byteArr, rowWidth);
 
   const getDataRows = <T extends unknown>(byteArr: T[], rowWidth: number) => {
     const rows: T[][] = [];
@@ -70,6 +72,8 @@
   .all-bytes {
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    align-items: flex-start;
   }
 
   .right-padding {
@@ -86,6 +90,7 @@
   }
 
   .byte-row {
+    display: flex;
     font-size: small;
     white-space: pre;
     overflow: hidden;
@@ -124,7 +129,7 @@
 
 <div class="all-bytes" {style}>
   {#each dataRows as row, rowIdx}
-    <div class="byte-row">
+    <div class="byte-row" style={byteRowStyle}>
       {#each row as byte, i}
         <span
           class={byteIsHighlighted(rowIdx * rowWidth + i, highlightedBytes)

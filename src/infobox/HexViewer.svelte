@@ -23,6 +23,12 @@
   $: if ($mousedown) {
     selectedByteIdx = undefined;
   }
+
+  let spacerDivWidth: number;
+  $: fixedWidth = showHex ? spacerDivWidth : fixedWidth;
+  $: {
+    console.log(spacerDivWidth);
+  }
 </script>
 
 <style>
@@ -30,6 +36,7 @@
     display: flex;
     flex: 1;
     margin: 10px 0;
+    min-width: 0;
   }
 </style>
 
@@ -50,16 +57,26 @@
       bind:selectedByteIdx
       bind:rowWidth
       byteStyle="min-width: 10px; padding: 0 5px;"
-      {leftWidthPx}
+      let:leftSlotWidth
+      fixedWidthPx={leftSlotWidth}
     />
-    <ByteGrid
-      slot="right"
-      byteArr={binaryData.map(byteToChar)}
-      {highlightedBytes}
-      bind:selectedByteIdx
-      bind:rowWidth
-      byteStyle="min-width: 5px;"
-      style="padding-left: 20px;"
-    />
+    <div slot="right" style="display: flex;" let:leftFullyVisible>
+      <ByteGrid
+        byteArr={binaryData.map(byteToChar)}
+        {highlightedBytes}
+        bind:selectedByteIdx
+        bind:rowWidth
+        byteStyle="min-width: 5px;"
+        style="padding-left: 20px;"
+        byteRowStyle="white-space: pre-wrap; flex-wrap: wrap;"
+        fixCurrentWidth={!leftFullyVisible}
+      />
+      <div
+        style={`height: 10px; flex: 1 0 ${
+          leftFullyVisible ? "auto" : `${fixedWidth - 1}px`
+        }`}
+        bind:clientWidth={spacerDivWidth}
+      />
+    </div>
   </ResizableSplit>
 </div>
