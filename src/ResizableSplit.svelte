@@ -68,7 +68,8 @@
     <div
       class="column"
       style="flex: 0 0 {leftSlotWidth}px; width: {leftSlotWidth}px;"
-      transition:slideHoriz={{ duration: 1000 }}
+      in:slideHoriz={{ duration: 1000 }}
+      out:slideHoriz={{ duration: 1000 }}
       on:outrostart={() => (leftFullyVisible = false)}
       on:introend={() => (leftFullyVisible = true)}
     >
