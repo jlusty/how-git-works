@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "svelte-feather-icons": "^3.5.0",
-    "svelte-toggle": "^3.0.0"
+    "svelte-toggle": "^3.0.0",
+    "tippy.js": "^6.3.1"
   }
 }

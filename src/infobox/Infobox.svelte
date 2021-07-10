@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
   import Toggle from "svelte-toggle";
+  import { tooltip } from "../tooltip/tooltip";
   import { readFile } from "../filesystem/filesystem";
   import { absoluteFilename, relativeFilename } from "../stores";
   import NavigationButtons from "./NavigationButtons.svelte";
@@ -74,7 +75,9 @@
   {/if}
 </div>
 {#if file}
-  <h4>{$relativeFilename}</h4>
+  <h4 use:tooltip={{ interactive: true }} title="Hello there">
+    {$relativeFilename}
+  </h4>
   <HexInfoBox
     binaryData={parsedWithZlib
       ? [...file.zlibParsed.buf]
