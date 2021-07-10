@@ -80,22 +80,12 @@
     padding-left: 20px;
   }
 
-  .hex-byte {
-    min-width: 10px;
-    padding: 0 5px;
-  }
-
-  .char-byte {
-    min-width: 5px;
-  }
-
   .byte-row {
     display: flex;
     font-size: small;
     white-space: pre;
     overflow: hidden;
     text-overflow: clip;
-    margin: 3px 0;
   }
   .byte-row span {
     display: inline-block;

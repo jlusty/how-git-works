@@ -56,7 +56,7 @@
       {highlightedBytes}
       bind:selectedByteIdx
       bind:rowWidth
-      byteStyle="min-width: 10px; padding: 0 5px;"
+      byteStyle="min-width: 10px; padding: 0 5px;  margin: 3px 0;"
       let:leftSlotWidth
       fixedWidthPx={leftSlotWidth}
     />
@@ -66,7 +66,7 @@
         {highlightedBytes}
         bind:selectedByteIdx
         bind:rowWidth
-        byteStyle="min-width: 5px;"
+        byteStyle="min-width: 5px;  margin: 3px 0;"
         style="padding-left: 20px;"
         byteRowStyle="white-space: pre-wrap; flex-wrap: wrap;"
         fixCurrentWidth={!leftFullyVisible}
