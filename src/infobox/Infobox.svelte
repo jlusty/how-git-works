@@ -15,7 +15,6 @@
   let parsedIndex = false;
 
   const unsubscribe = absoluteFilename.subscribe((value) => {
-    showHex = true;
     parsedWithZlib = false;
     parsedTree = false;
     parsedIndex = false;
