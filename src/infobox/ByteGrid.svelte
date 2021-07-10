@@ -21,15 +21,36 @@
   export const byteWidthPx = 26;
   export let rowWidth: number;
   $: rowWidth = Math.max(Math.floor(fixedWidthPx / byteWidthPx), 1);
-  $: dataRows = fixCurrentWidth ? [byteArr] : getDataRows(byteArr, rowWidth);
+  $: dataRows = fixCurrentWidth
+    ? getDataRowsNewline(byteArr)
+    : getDataRows(byteArr, rowWidth, (b) =>
+        b === "\n" || b === "\t" ? "." : b
+      );
 
-  const getDataRows = <T extends unknown>(byteArr: T[], rowWidth: number) => {
+  const getDataRows = <T extends unknown>(
+    byteArr: T[],
+    rowWidth: number,
+    byteTransform?: (b: T) => any
+  ) => {
     const rows: T[][] = [];
     for (let i = 0; i < byteArr.length; i++) {
+      const b = byteTransform(byteArr[i]);
       if (i % rowWidth === 0) {
-        rows.push([byteArr[i]]);
+        rows.push([b]);
       } else {
-        rows[rows.length - 1].push(byteArr[i]);
+        rows[rows.length - 1].push(b);
+      }
+    }
+    return rows;
+  };
+
+  const getDataRowsNewline = <T extends unknown>(byteArr: T[]) => {
+    const rows: T[][] = [[]];
+    for (const b of byteArr) {
+      if (b === "\n") {
+        rows.push([b]);
+      } else {
+        rows[rows.length - 1].push(b);
       }
     }
     return rows;

@@ -2,6 +2,7 @@
   import ResizableSplit from "../ResizableSplit.svelte";
   import { mousedown } from "../stores";
   import ByteGrid from "./ByteGrid.svelte";
+  import SpacerDiv from "./SpacerDiv.svelte";
   import type { HighlightedByteRange } from "./types";
 
   export let binaryData: number[] = [];
@@ -15,19 +16,22 @@
   let selectedByteIdx: number | undefined = undefined;
 
   const byteToHex = (b: number) => `${b < 16 ? "0" : ""}${b.toString(16)}`;
-  const byteToChar = (b: number) =>
-    isBytePrintableASCII(b) ? String.fromCharCode(b) : ".";
+  const byteToChar = (b: number) => {
+    switch (b) {
+      case 0x00:
+        return "␀";
+      case 0x09:
+        return "\t";
+      case 0x0a:
+        return "\n";
+    }
+    return isBytePrintableASCII(b) ? String.fromCharCode(b) : ".";
+  };
 
   const isBytePrintableASCII = (byte: number) => byte >= 0x20 && byte <= 0x7f;
 
   $: if ($mousedown) {
     selectedByteIdx = undefined;
-  }
-
-  let spacerDiv;
-  let spacerDivWidth: number;
-  $: if (spacerDiv && showHex && !$mousedown) {
-    spacerDivWidth = spacerDiv.clientWidth;
   }
 </script>
 
@@ -71,12 +75,7 @@
         byteRowStyle="white-space: pre-wrap; flex-wrap: wrap;"
         fixCurrentWidth={!leftFullyVisible}
       />
-      <div
-        bind:this={spacerDiv}
-        style={`height: 10px; flex: 1 0 ${
-          leftFullyVisible ? "auto" : `${spacerDivWidth}px`
-        }`}
-      />
+      <SpacerDiv {leftFullyVisible} />
     </div>
   </ResizableSplit>
 </div>
