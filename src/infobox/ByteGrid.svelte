@@ -32,25 +32,26 @@
     rowWidth: number,
     byteTransform?: (b: T) => any
   ) => {
-    const rows: T[][] = [];
+    const rows: { byte: T; idx: number }[][] = [];
     for (let i = 0; i < byteArr.length; i++) {
       const b = byteTransform(byteArr[i]);
       if (i % rowWidth === 0) {
-        rows.push([b]);
+        rows.push([{ byte: b, idx: i }]);
       } else {
-        rows[rows.length - 1].push(b);
+        rows[rows.length - 1].push({ byte: b, idx: i });
       }
     }
     return rows;
   };
 
   const getDataRowsNewline = <T extends unknown>(byteArr: T[]) => {
-    const rows: T[][] = [[]];
-    for (const b of byteArr) {
+    const rows: { byte: T; idx: number }[][] = [[]];
+    for (let i = 0; i < byteArr.length; i++) {
+      const b = byteArr[i];
       if (b === "\n") {
-        rows.push([b]);
+        rows.push([{ byte: b, idx: i }]);
       } else {
-        rows[rows.length - 1].push(b);
+        rows[rows.length - 1].push({ byte: b, idx: i });
       }
     }
     return rows;
@@ -139,18 +140,17 @@
 </style>
 
 <div class="all-bytes" {style}>
-  {#each dataRows as row, rowIdx}
+  {#each dataRows as row}
     <div class="byte-row" style={byteRowStyle}>
-      {#each row as byte, i}
+      {#each row as { byte, idx }}
         <span
-          class={byteIsHighlighted(rowIdx * rowWidth + i, highlightedBytes)
-            ?.type}
+          class={byteIsHighlighted(idx, highlightedBytes)?.type}
           style="{byteStyle} max-width: {byteWidthPx}px; --highlight-color: {byteIsHighlighted(
-            rowIdx * rowWidth + i,
+            idx,
             highlightedBytes
           )?.color ?? '100, 100, 100'}"
-          class:selected={selectedByteIdx === rowIdx * rowWidth + i}
-          on:mouseenter={() => setSelectedByteIdx(rowIdx * rowWidth + i)}
+          class:selected={selectedByteIdx === idx}
+          on:mouseenter={() => setSelectedByteIdx(idx)}
           on:mouseleave={unsetSelectedByteIdx}>{byte}</span
         >
       {/each}
