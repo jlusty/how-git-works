@@ -4,3 +4,12 @@ asar: true
 
 mac:
   category: "public.app-category.utilities"
+
+directories:
+  buildResources: "resources"
+  output: "release"
+
+files:
+  - "src/electron.js"
+  - "public/**/*"
+  - "resources/**/*"
