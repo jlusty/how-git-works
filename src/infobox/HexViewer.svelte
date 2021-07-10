@@ -24,10 +24,10 @@
     selectedByteIdx = undefined;
   }
 
+  let spacerDiv;
   let spacerDivWidth: number;
-  $: fixedWidth = showHex ? spacerDivWidth : fixedWidth;
-  $: {
-    console.log(spacerDivWidth);
+  $: if (spacerDiv && showHex && !$mousedown) {
+    spacerDivWidth = spacerDiv.clientWidth;
   }
 </script>
 
@@ -72,10 +72,10 @@
         fixCurrentWidth={!leftFullyVisible}
       />
       <div
+        bind:this={spacerDiv}
         style={`height: 10px; flex: 1 0 ${
-          leftFullyVisible ? "auto" : `${fixedWidth - 1}px`
+          leftFullyVisible ? "auto" : `${spacerDivWidth}px`
         }`}
-        bind:clientWidth={spacerDivWidth}
       />
     </div>
   </ResizableSplit>
