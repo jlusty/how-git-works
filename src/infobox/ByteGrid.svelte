@@ -1,5 +1,6 @@
 <script lang="ts">
   import { mousedown } from "../stores";
+  import { tooltip } from "../tooltip/tooltip";
   import type { HighlightedByteRange } from "./types";
 
   export let byteStyle: string;
@@ -75,16 +76,16 @@
   const byteIsHighlighted = (
     byteIdx: number,
     highlightedBytes: HighlightedByteRange[]
-  ): { type: HighlightType; color: string } => {
-    for (const { start, end, color } of highlightedBytes) {
+  ): { type: HighlightType; [param: string]: string } => {
+    for (const { start, end, ...params } of highlightedBytes) {
       if (byteIdx === start && end == null) {
-        return { type: "highlighted-single", color };
+        return { type: "highlighted-single", ...params };
       } else if (byteIdx === start) {
-        return { type: "highlighted-left", color };
+        return { type: "highlighted-left", ...params };
       } else if (byteIdx > start && byteIdx < end) {
-        return { type: "highlighted-middle", color };
+        return { type: "highlighted-middle", ...params };
       } else if (byteIdx === end) {
-        return { type: "highlighted-right", color };
+        return { type: "highlighted-right", ...params };
       }
     }
   };
@@ -143,16 +144,31 @@
   {#each dataRows as row}
     <div class="byte-row" style={byteRowStyle}>
       {#each row as { byte, idx }}
-        <span
-          class={byteIsHighlighted(idx, highlightedBytes)?.type}
-          style="{byteStyle} max-width: {byteWidthPx}px; --highlight-color: {byteIsHighlighted(
-            idx,
-            highlightedBytes
-          )?.color ?? '100, 100, 100'}"
-          class:selected={selectedByteIdx === idx}
-          on:mouseenter={() => setSelectedByteIdx(idx)}
-          on:mouseleave={unsetSelectedByteIdx}>{byte}</span
-        >
+        {#if byteIsHighlighted(idx, highlightedBytes)}
+          <span
+            class={byteIsHighlighted(idx, highlightedBytes)?.type}
+            style="{byteStyle} max-width: {byteWidthPx}px; --highlight-color: {byteIsHighlighted(
+              idx,
+              highlightedBytes
+            )?.color ?? '100, 100, 100'}"
+            class:selected={selectedByteIdx === idx}
+            on:mouseenter={() => setSelectedByteIdx(idx)}
+            on:mouseleave={unsetSelectedByteIdx}
+            use:tooltip={{ interactive: true }}
+            title={byteIsHighlighted(idx, highlightedBytes)?.description}
+          >
+            {byte}
+          </span>
+        {:else}
+          <span
+            style="{byteStyle} max-width: {byteWidthPx}px; --highlight-color: {'100, 100, 100'}"
+            class:selected={selectedByteIdx === idx}
+            on:mouseenter={() => setSelectedByteIdx(idx)}
+            on:mouseleave={unsetSelectedByteIdx}
+          >
+            {byte}
+          </span>
+        {/if}
       {/each}
     </div>
   {/each}
