@@ -16,7 +16,6 @@
   let parsedIndex = false;
 
   const unsubscribe = absoluteFilename.subscribe((value) => {
-    parsedWithZlib = false;
     parsedTree = false;
     parsedIndex = false;
     if (value.length > 0) {
@@ -75,9 +74,7 @@
   {/if}
 </div>
 {#if file}
-  <h4 use:tooltip={{ interactive: true }} title="Hello there">
-    {$relativeFilename}
-  </h4>
+  <h4>{$relativeFilename}</h4>
   <HexInfoBox
     binaryData={parsedWithZlib
       ? [...file.zlibParsed.buf]

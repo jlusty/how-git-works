@@ -1,4 +1,5 @@
 import type { HighlightedByteRange } from "../infobox/types";
+import { unpackHash } from "./decodeGit";
 import { parseGitIndex } from "./parseIndex";
 import { parseGitTree } from "./parseTree";
 
@@ -8,7 +9,7 @@ export type GitIndex = "index";
 const tree = (bytes: number[]): HighlightedByteRange[] => {
   const parsedTree = parseGitTree(Buffer.from(bytes));
 
-  const highlights = [
+  const highlights: HighlightedByteRange[] = [
     {
       start: 0,
       end: 5 + parsedTree.length.length - 1,
@@ -23,15 +24,19 @@ const tree = (bytes: number[]): HighlightedByteRange[] => {
       start: start,
       end: start + 5 + 2 + f.name.length - 1,
       color: "0, 0, 255",
-      description: "file",
+      description: "file name",
     });
+    start = start + 5 + 2 + f.name.length + 1;
+    let end = start + 5 + 2 + f.name.length + 1 + 19;
+    const hash = unpackHash(bytes.slice(start, end));
     highlights.push({
-      start: start + 5 + 2 + f.name.length + 1,
-      end: start + 5 + 2 + f.name.length + 1 + 19,
+      start,
+      end,
       color: "0, 255, 255",
-      description: "file",
+      description: "object hash",
+      hash,
     });
-    start = start + 5 + 2 + f.name.length + 1 + 19 + 1;
+    start = 19 + 1;
   }
 
   return highlights;

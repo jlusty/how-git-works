@@ -3,4 +3,5 @@ export interface HighlightedByteRange {
   end?: number;
   color?: string;
   description?: string;
+  hash?: string;
 }
