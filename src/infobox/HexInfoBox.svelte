@@ -1,12 +1,12 @@
 <script lang="ts">
   import HyperlinkHashes from "./HyperlinkHashes.svelte";
   import HexViewer from "./HexViewer.svelte";
-  import type { ObjectType } from "../processGit/highlightedBytes";
+  import type { ObjectType, GitIndex } from "../processGit/highlightedBytes";
   import { possibleHighlights } from "../processGit/highlightedBytes";
 
   export let binaryData: number[] = [];
   export let showHex = true;
-  export let objectType: ObjectType | null = null;
+  export let objectType: ObjectType | GitIndex | null = null;
 
   $: highlightedBytes = objectType
     ? possibleHighlights[objectType](binaryData)

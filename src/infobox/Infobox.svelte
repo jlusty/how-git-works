@@ -80,7 +80,7 @@
       ? [...file.zlibParsed.buf]
       : [...file.contents.buf]}
     {showHex}
-    objectType={parsedTree ? "tree" : null}
+    objectType={parsedTree ? "tree" : parsedIndex ? "index" : null}
   />
 {:else}
   <p>No file opened</p>
