@@ -28,7 +28,7 @@ const tree = (bytes: number[]): HighlightedByteRange[] => {
     });
     start = start + 5 + 2 + f.name.length + 1;
     let end = start + 19;
-    const hash = unpackHash(bytes.slice(start, end));
+    const hash = unpackHash(bytes.slice(start, end + 1));
     highlights.push({
       start,
       end,

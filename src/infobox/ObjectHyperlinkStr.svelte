@@ -1,20 +1,23 @@
 <script lang="ts">
-  import { absoluteFilename, gitFolder } from "../stores";
+  import { absoluteFilename, gitFolder, hash } from "../stores";
 
-  export let hash: string | undefined;
+  const fullObjectPath = (hashStr: string) =>
+    `${$gitFolder}\\objects\\${hashStr.substring(0, 2)}\\${hashStr.substring(
+      2
+    )}`;
 
-  const fullObjectPath = (hash: string) =>
-    `${$gitFolder}\\objects\\${hash.substring(0, 2)}\\${hash.substring(2)}`;
-
-  const goToObject = (hash: string) => {
-    const fullPath = fullObjectPath(hash);
+  const goToObject = (hashStr: string) => {
+    const fullPath = fullObjectPath(hashStr);
     absoluteFilename.set(fullPath);
+    hash.set(undefined);
   };
 </script>
 
-{#if hash}
+{#if $hash}
   <a
-    href={fullObjectPath(hash)}
-    on:click|preventDefault={() => goToObject(hash)}>{hash}</a
+    href={fullObjectPath($hash)}
+    on:click|preventDefault={() => goToObject($hash)}
   >
+    {$hash}
+  </a>
 {/if}
