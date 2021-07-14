@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
   import Toggle from "svelte-toggle";
-  import { tooltip } from "../tooltip/tooltip";
   import { readFile } from "../filesystem/filesystem";
-  import { absoluteFilename, relativeFilename } from "../stores";
+  import { absoluteFilename, hash, relativeFilename } from "../stores";
   import NavigationButtons from "./NavigationButtons.svelte";
   import { parseFile } from "./parseFile";
   import type { GitFile } from "./parseFile";
   import HexInfoBox from "./HexInfoBox.svelte";
+  import ObjectHyperlinkStr from "./ObjectHyperlinkStr.svelte";
 
   let file: GitFile | null;
   let showHex = true;
@@ -16,6 +16,7 @@
   let parsedIndex = false;
 
   const unsubscribe = absoluteFilename.subscribe((value) => {
+    parsedWithZlib = false;
     parsedTree = false;
     parsedIndex = false;
     if (value.length > 0) {
@@ -51,6 +52,10 @@
     font-size: small;
     padding: 0 5px 0 20px;
   }
+
+  p {
+    font-size: small;
+  }
 </style>
 
 <div class="button-row">
@@ -75,6 +80,7 @@
 </div>
 {#if file}
   <h4>{$relativeFilename}</h4>
+  <p>Hash: <ObjectHyperlinkStr hash={$hash} /></p>
   <HexInfoBox
     binaryData={parsedWithZlib
       ? [...file.zlibParsed.buf]

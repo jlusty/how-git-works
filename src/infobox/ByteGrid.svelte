@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { mousedown } from "../stores";
-  import { tooltip } from "../tooltip/tooltip";
-  import ObjectHyperlinkStr from "./ObjectHyperlinkStr.svelte";
+  import { hash, mousedown } from "../stores";
   import type { HighlightedByteRange } from "./types";
 
   export let byteStyle: string;
@@ -70,7 +68,10 @@
     }
   };
 
-  $: if ($mousedown) {
+  $: if ($mousedown && selectedByteIdx) {
+    hash.set(
+      byteIsHighlighted(selectedByteIdx, highlightedBytes)?.hash ?? undefined
+    );
     selectedByteIdx = undefined;
   }
 
@@ -146,25 +147,15 @@
     <div class="byte-row" style={byteRowStyle}>
       {#each row as { byte, idx }}
         {#if byteIsHighlighted(idx, highlightedBytes)?.hash}
-          <ObjectHyperlinkStr
-            id={`${idx}-${byteIsHighlighted(idx, highlightedBytes)?.hash}`}
-            hash={byteIsHighlighted(idx, highlightedBytes)?.hash}
-          />
           <span
             class={byteIsHighlighted(idx, highlightedBytes)?.type}
-            style="{byteStyle} max-width: {byteWidthPx}px; --highlight-color: {byteIsHighlighted(
+            style="{byteStyle} cursor: pointer; max-width: {byteWidthPx}px; --highlight-color: {byteIsHighlighted(
               idx,
               highlightedBytes
             )?.color ?? '100, 100, 100'}"
             class:selected={selectedByteIdx === idx}
             on:mouseenter={() => setSelectedByteIdx(idx)}
             on:mouseleave={unsetSelectedByteIdx}
-            use:tooltip={{
-              interactive: true,
-              content: document.getElementById(
-                `${idx}-${byteIsHighlighted(idx, highlightedBytes)?.hash}`
-              ),
-            }}
           >
             {byte}
           </span>

@@ -31,3 +31,5 @@ openFolder.subscribe((value) => {
 });
 
 export const mousedown = writable(false);
+
+export const hash = writable(undefined);

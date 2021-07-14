@@ -1,8 +1,7 @@
 <script lang="ts">
   import { absoluteFilename, gitFolder } from "../stores";
 
-  export let id: string;
-  export let hash: string;
+  export let hash: string | undefined;
 
   const fullObjectPath = (hash: string) =>
     `${$gitFolder}\\objects\\${hash.substring(0, 2)}\\${hash.substring(2)}`;
@@ -13,8 +12,9 @@
   };
 </script>
 
-<a
-  {id}
-  href={fullObjectPath(hash)}
-  on:click|preventDefault={() => goToObject(hash)}>{hash}</a
->
+{#if hash}
+  <a
+    href={fullObjectPath(hash)}
+    on:click|preventDefault={() => goToObject(hash)}>{hash}</a
+  >
+{/if}

@@ -27,7 +27,7 @@ const tree = (bytes: number[]): HighlightedByteRange[] => {
       description: "file name",
     });
     start = start + 5 + 2 + f.name.length + 1;
-    let end = start + 5 + 2 + f.name.length + 1 + 19;
+    let end = start + 19;
     const hash = unpackHash(bytes.slice(start, end));
     highlights.push({
       start,
@@ -36,7 +36,7 @@ const tree = (bytes: number[]): HighlightedByteRange[] => {
       description: "object hash",
       hash,
     });
-    start = 19 + 1;
+    start = end + 1;
   }
 
   return highlights;
@@ -70,14 +70,18 @@ const index = (bytes: number[]): HighlightedByteRange[] => {
   const addEntry = (
     length: number,
     description: string,
-    color: string = "0, 0, 255"
+    color: string = "0, 0, 255",
+    hash?: string
   ) => {
     let end = start + length - 1;
     highlights.push({
-      start,
-      end,
-      color,
-      description,
+      ...{
+        start,
+        end,
+        color,
+        description,
+      },
+      ...(hash && { hash }),
     });
     start = end + 1;
   };
@@ -93,7 +97,7 @@ const index = (bytes: number[]): HighlightedByteRange[] => {
     addEntry(4, "uid");
     addEntry(4, "gid");
     addEntry(4, "file size");
-    addEntry(20, "hash", "255, 0, 0");
+    addEntry(20, "hash", "255, 0, 0", parsedIndex.entries[i].hash);
     addEntry(2, "flags and filename length");
     addEntry(parsedIndex.entries[i].filenameLength, "filename");
     start++;
