@@ -16,9 +16,6 @@
   let parsedIndex = false;
 
   const unsubscribe = absoluteFilename.subscribe((value) => {
-    parsedWithZlib = false;
-    parsedTree = false;
-    parsedIndex = false;
     if (value.length > 0) {
       const contents = readFile(value);
       if (contents) {
@@ -26,6 +23,15 @@
       } else {
         file = null;
       }
+    }
+    if (!file?.zlibParsed) {
+      parsedWithZlib = false;
+    }
+    if (!file?.zlibParsed || file.type !== "tree") {
+      parsedTree = false;
+    }
+    if (file.type !== "index") {
+      parsedIndex = false;
     }
   });
 
