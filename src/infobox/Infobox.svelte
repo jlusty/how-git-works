@@ -13,6 +13,7 @@
   let showHex = true;
   let parsedWithZlib = false;
   let parsedTree = false;
+  let parsedCommit = false;
   let parsedIndex = false;
 
   const unsubscribe = absoluteFilename.subscribe((value) => {
@@ -29,6 +30,9 @@
     }
     if (!file?.zlibParsed || file.type !== "tree") {
       parsedTree = false;
+    }
+    if (file.type !== "commit") {
+      parsedCommit = false;
     }
     if (file.type !== "index") {
       parsedIndex = false;
@@ -79,6 +83,10 @@
     <p class="toggle-label">tree parsed:</p>
     <Toggle bind:toggled={parsedTree} hideLabel class="no-margin" />
   {/if}
+  {#if file.type === "commit"}
+    <p class="toggle-label">commit parsed:</p>
+    <Toggle bind:toggled={parsedCommit} hideLabel class="no-margin" />
+  {/if}
   {#if file?.contents.str.substring(0, 4) === "DIRC"}
     <p class="toggle-label">index parsed:</p>
     <Toggle bind:toggled={parsedIndex} hideLabel class="no-margin" />
@@ -92,7 +100,13 @@
       ? [...file.zlibParsed.buf]
       : [...file.contents.buf]}
     {showHex}
-    objectType={parsedTree ? "tree" : parsedIndex ? "index" : null}
+    objectType={parsedTree
+      ? "tree"
+      : parsedCommit
+      ? "commit"
+      : parsedIndex
+      ? "index"
+      : null}
   />
 {:else}
   <p>No file opened</p>

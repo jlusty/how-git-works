@@ -7,6 +7,7 @@ export type ObjectType = "blob" | "tree" | "commit" | "tag";
 export type GitIndex = "index";
 
 const tree = (bytes: number[]): HighlightedByteRange[] => {
+  console.log(bytes);
   const parsedTree = parseGitTree(Buffer.from(bytes));
 
   const highlights: HighlightedByteRange[] = [
@@ -106,4 +107,78 @@ const index = (bytes: number[]): HighlightedByteRange[] => {
   return highlights;
 };
 
-export const possibleHighlights = { tree, index };
+const commit = (bytes: number[]): HighlightedByteRange[] => {
+  const highlights = [
+    {
+      start: 0,
+      end: 5,
+      color: "0, 255, 0",
+      description: "signature",
+    },
+  ];
+
+  let start = 7;
+  const addEntry = (
+    length: number,
+    description: string,
+    color: string = "0, 0, 255",
+    hash?: string
+  ) => {
+    let end = start + length - 1;
+    highlights.push({
+      ...{
+        start,
+        end,
+        color,
+        description,
+      },
+      ...(hash && { hash }),
+    });
+    start = end + 1;
+  };
+
+  let i = 0;
+  while (bytes[start + i] !== 0) {
+    i++;
+  }
+  addEntry(i, "length");
+  start += 1;
+
+  addEntry(4, "tree label");
+  start += 1;
+  addEntry(
+    40,
+    "hash",
+    "255, 0, 0",
+    String.fromCharCode(...bytes.slice(start, start + 40))
+  );
+
+  if (String.fromCharCode(...bytes.slice(start + 1, start + 7)) === "parent") {
+    start += 1;
+    addEntry(6, "tree label");
+    start += 1;
+    addEntry(
+      40,
+      "hash",
+      "255, 0, 0",
+      String.fromCharCode(...bytes.slice(start, start + 40))
+    );
+  }
+
+  start += 1;
+  i = 1;
+  while (bytes[start + i] !== 0x0a && i < bytes.length) {
+    i++;
+  }
+  i += 1;
+  while (bytes[start + i] !== 0x0a && i < bytes.length) {
+    i++;
+  }
+  addEntry(i, "author and committer");
+
+  start += 2;
+  addEntry(bytes.length - start - 1, "commit message");
+  return highlights;
+};
+
+export const possibleHighlights = { tree, index, commit };

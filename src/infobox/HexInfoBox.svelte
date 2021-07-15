@@ -1,5 +1,4 @@
 <script lang="ts">
-  import HyperlinkHashes from "./HyperlinkHashes.svelte";
   import HexViewer from "./HexViewer.svelte";
   import type { ObjectType, GitIndex } from "../processGit/highlightedBytes";
   import { possibleHighlights } from "../processGit/highlightedBytes";
@@ -37,9 +36,5 @@
 </style>
 
 <div class="scrolling-box break-lines small-font">
-  <!-- {#if showHex} -->
   <HexViewer {binaryData} {highlightedBytes} {showHex} />
-  <!-- {:else}
-    <HyperlinkHashes bytes={binaryData} />
-  {/if} -->
 </div>
