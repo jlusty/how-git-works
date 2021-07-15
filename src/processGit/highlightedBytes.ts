@@ -88,6 +88,7 @@ const index = (bytes: number[]): HighlightedByteRange[] => {
   };
 
   for (let i = 0; i < parsedIndex.headers.numEntries; i++) {
+    const entryStartPoint = start;
     addEntry(4, "ctime seconds");
     addEntry(4, "ctime nanoseconds");
     addEntry(4, "mtime seconds");
@@ -102,6 +103,9 @@ const index = (bytes: number[]): HighlightedByteRange[] => {
     addEntry(2, "flags and filename length");
     addEntry(parsedIndex.entries[i].filenameLength, "filename");
     start++;
+    while ((start - entryStartPoint) % 8 !== 0) {
+      start++;
+    }
   }
 
   return highlights;
